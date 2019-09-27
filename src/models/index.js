@@ -13,6 +13,7 @@ const db = {};
 if (environ === 'test') config.logging = false;
 const sequelize = new Sequelize(
   config.url,
+  config.dialect,
   config
 );
 
