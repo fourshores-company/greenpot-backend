@@ -1,0 +1,131 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0",
+        "title": "GreenPot Food Services",
+        "description": "GreenPot food services brings the food you love to your doorstep"
+    },
+    "servers": [
+        {
+          "url": "http://localhost:3000/"
+        },
+        {
+          "url": "https://greenpot-api.herokuapp.com/"
+        }
+      ],
+    "host": "",
+    "basePath": "/v1.0/api",
+    "securityDefinitions": {
+        "Bearer": {
+            "description": "Standard Authorization header using the bearer scheme. Example: \"bearer {token}\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Endpoint for Authentication"
+        },
+        {
+            "name": "Users",
+            "description": "Endpoint for Users"
+        }
+    ],
+    "paths": {
+        "/auth/signup": {
+            "post": {
+                "description": "Register a User",
+                "summary": "Registers new user to greenpot database",
+                "tags": [
+                    "Auth"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing user information",
+                        "schema": {
+                            "$ref": "#/requestBody/userRegistration"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "400": {
+                        "description": "Please fill in the fields"
+                    },
+                    "409": {
+                        "description": "User with email already exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+        "requestBody": {
+            "userRegistration": {
+                "title": "User registration request",
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "description": "First name of the talent",
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "description": "Last name of the talent",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email of the talent",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "The Password of the talent",
+                        "type": "string"
+                    },
+                    "birthdate": {
+                        "description": "The date of birth of talent",
+                        "type": "date"
+                    },
+                    "gender": {
+                        "description": "The talent's gender",
+                        "type": "string"
+
+                    },
+                    "phoneNumber": {
+                        "description": "The user's phone number",
+                        "type": "string"
+                    },
+                    "address": {
+                        "description": "The talent's address",
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "firstName": "King",
+                    "lastName": "David",
+                    "email": "david@gmail.com",
+                    "password": "Elija455h",
+                    "gender": "male",
+                    "birthdate": "2010-01-01",
+                    "phoneNumber": "08063345598",
+                    "address": "3, epselom street, lekki"
+                  },
+                "required": [
+                    "firstName, lastName, email, password"
+                ]
+            }
+        }
+    }
+    
