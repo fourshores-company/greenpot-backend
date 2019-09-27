@@ -79,27 +79,27 @@
                 "type": "object",
                 "properties": {
                     "firstName": {
-                        "description": "First name of the talent",
+                        "description": "First name of the user",
                         "type": "string"
                     },
                     "lastName": {
-                        "description": "Last name of the talent",
+                        "description": "Last name of the user",
                         "type": "string"
                     },
                     "email": {
-                        "description": "Email of the talent",
+                        "description": "Email of the user",
                         "type": "string"
                     },
                     "password": {
-                        "description": "The Password of the talent",
+                        "description": "The Password of the user",
                         "type": "string"
                     },
                     "birthdate": {
-                        "description": "The date of birth of talent",
+                        "description": "The date of birth of user",
                         "type": "date"
                     },
                     "gender": {
-                        "description": "The talent's gender",
+                        "description": "The user's gender",
                         "type": "string"
 
                     },
@@ -108,7 +108,7 @@
                         "type": "string"
                     },
                     "address": {
-                        "description": "The talent's address",
+                        "description": "The user's address",
                         "type": "string"
                     }
                 },
