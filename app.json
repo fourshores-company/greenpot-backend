@@ -21,7 +21,7 @@
   },
   "formation": {},
   "name": "greenpot-backend",
-  "repository": "https://github.com/foreshore-inc/greenpot-backend.git",
+  "repository": "https://github.com/fourshores-company/greenpot-backend.git",
   "scripts": {},
   "stack": "heroku-18"
 }
