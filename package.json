@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/foreshore-inc/greenpot-backend.git"
+    "url": "git+https://github.com/fourshores-company/greenpot-backend.git"
   },
   "keywords": [
     "#food",
@@ -22,9 +22,9 @@
   "author": "foreshore inc",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/foreshore-inc/greenpot-backend/issues"
+    "url": "https://github.com/fourshores-company/greenpot-backend/issues"
   },
-  "homepage": "https://github.com/foreshore-inc/greenpot-backend#readme",
+  "homepage": "https://github.com/fourshores-company/greenpot-backend#readme",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@sendgrid/mail": "^6.4.0",
