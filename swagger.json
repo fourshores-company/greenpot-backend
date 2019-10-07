@@ -94,7 +94,7 @@
                         "description": "The Password of the user",
                         "type": "string"
                     },
-                    "birthdate": {
+                    "birthDate": {
                         "description": "The date of birth of user",
                         "type": "date"
                     },
@@ -107,8 +107,24 @@
                         "description": "The user's phone number",
                         "type": "string"
                     },
-                    "address": {
+                    "addressLine1": {
                         "description": "The user's address",
+                        "type": "string"
+                    },
+                    "addressLine2": {
+                        "description": "The user's address",
+                        "type": "string"
+                    },
+                    "city": {
+                        "description": "The user's city",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "The user's state",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "The user's country",
                         "type": "string"
                     }
                 },
@@ -118,9 +134,13 @@
                     "email": "david@gmail.com",
                     "password": "Elija455h",
                     "gender": "male",
-                    "birthdate": "2010-01-01",
+                    "birthDate": "2010-01-01",
                     "phoneNumber": "08063345598",
-                    "address": "3, epselom street, lekki"
+                    "addressLine1": "No 34, cintro street",
+                    "addressLine2": "Northpoint drive Allen",
+                    "city": "Gidi",
+                    "state": "Lagos",
+                    "country": "Nigeria"
                   },
                 "required": [
                     "firstName, lastName, email, password"
