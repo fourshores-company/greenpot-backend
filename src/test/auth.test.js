@@ -11,7 +11,6 @@ describe('Authentication route', () => {
       .request(server)
       .post('/v1.0/api/auth/signup')
       .send(newUser);
-    console.log('user data: ', response.body.data);
     expect(response).to.have.status(201);
     expect(response.body.data).to.be.a('object');
     expect(response.body.data.user.token).to.be.a('string');

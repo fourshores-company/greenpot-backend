@@ -36,9 +36,11 @@ export default class AuthValidation {
       gender: joi.string().valid('male', 'female')
         .label('please input a gender (male or female)'),
       birthDate: joi.date().iso().label('Please input a valid date format: yy-mm-dd'),
-      addressLine1: joi.string().min(3).max(60).regex(/^[\w',-\\/.\s]*$/).required()
+      addressLine1: joi.string().min(3).max(60).regex(/^[\w',-\\/.\s]*$/)
+        .required()
         .label('Please enter a valid address that is within 3 to 60 characters long'),
-      addressLine2: joi.string().min(3).max(60).regex(/^[\w',-\\/.\s]*$/).required()
+      addressLine2: joi.string().min(3).max(60).regex(/^[\w',-\\/.\s]*$/)
+        .required()
         .label('Please enter a valid address that is within 3 to 60 characters long'),
       city: joi.string().min(3).max(25).label('Please input a city name'),
       state: joi.string().min(3).max(25).label('Please input a state name'),

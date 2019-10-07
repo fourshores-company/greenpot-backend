@@ -1,6 +1,4 @@
 import AuthValidation from './authValidation';
 
 
-export {
-  AuthValidation,
-};
+export { AuthValidation };

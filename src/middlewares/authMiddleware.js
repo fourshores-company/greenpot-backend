@@ -1,5 +1,5 @@
 import { AuthValidation } from '../validations';
-import { Toolbox, ApiError } from '../utils';
+import { Toolbox } from '../utils';
 import { UserService } from '../services';
 
 const {

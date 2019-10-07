@@ -1,5 +1,3 @@
 import AuthMiddleware from './authMiddleware';
 
-export {
-  AuthMiddleware
-};
+export { AuthMiddleware };
