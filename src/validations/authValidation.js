@@ -22,6 +22,7 @@ export default class AuthValidation {
    * @param {object} userObject - the user object
    * @returns {object | boolean} - returns a boolean if validation passes
    * or an error object
+   * @memberof AuthValidation
    */
   static async validateUserSignup(userObject) {
     const schema = {
@@ -30,7 +31,7 @@ export default class AuthValidation {
       lastName: joi.string().min(3).max(25).required()
         .label('Please enter a valid lastname \n the field must not be empty and it must be more than 2 letters'),
       email: joi.string().email().required()
-        .label('Please enter a valid company email address'),
+        .label('Please enter a valid email address'),
       password: new passwordComplexity(complexityOptions).required()
         .label('Password is required. \n It should be more than 8 characters, and should include at least a capital letter, and a number'),
       gender: joi.string().valid('male', 'female')
@@ -46,6 +47,27 @@ export default class AuthValidation {
       state: joi.string().min(3).max(25).label('Please input a state name'),
       country: joi.string().min(3).max(50).label('Please input a country'),
       phoneNumber: joi.string().regex(/^[0-9+\(\)#\.\s\/ext-]+$/).label('Please input a valid phone number')
+    };
+    const { error } = joi.validate({ ...userObject }, schema);
+    if (error) {
+      throw error.details[0].context.label;
+    }
+    return true;
+  }
+
+  /**
+   * validate user parameters during login
+   * @param {object} userObject - the user object
+   * @returns {boolean | object} - returns a boolean if validation passes
+   * or an error object
+   * @memberof AuthValidation
+   */
+  static async validateUserLogin(userObject) {
+    const schema = {
+      email: joi.string().email().required()
+        .label('Please enter a valid email address'),
+      password: new passwordComplexity(complexityOptions).required()
+        .label('Password is required. \n It should be more than 8 characters, and should include at least a capital letter, and a number'),
     };
     const { error } = joi.validate({ ...userObject }, schema);
     if (error) {
