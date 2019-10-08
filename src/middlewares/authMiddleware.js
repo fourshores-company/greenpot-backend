@@ -6,7 +6,7 @@ const {
   errorResponse,
 } = Toolbox;
 const {
-  validateUserSignup
+  validateUserSignup, validateUserLogin
 } = AuthValidation;
 const {
   findUser
@@ -30,11 +30,37 @@ export default class AuthMiddleware {
       const validated = await validateUserSignup(req.body);
       if (validated) {
         const { email } = req.body;
-        const oldUser = await findUser({ email });
-        if (!oldUser) {
+        const member = await findUser({ email });
+        if (!member) {
           next();
         } else {
           errorResponse(res, { code: 409, message: `User with email "${email}" already exists` });
+        }
+      }
+    } catch (error) {
+      errorResponse(res, { code: 400, message: error });
+    }
+  }
+
+  /**
+   * Middleware for user validation during login
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - returns error or response object
+   * @memberof AuthMiddleware
+   */
+  static async onLogin(req, res, next) {
+    try {
+      const validated = await validateUserLogin(req.body);
+      if (validated) {
+        const { email } = req.body;
+        const member = await findUser({ email });
+        if (member) {
+          req.member = member;
+          next();
+        } else {
+          errorResponse(res, { code: 404, message: `User with email "${email}" does not exists. Please check your details` });
         }
       }
     } catch (error) {

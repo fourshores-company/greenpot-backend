@@ -4,12 +4,13 @@ import { AuthController } from '../controllers';
 
 const router = Router();
 const {
-  onSignup,
+  onSignup, onLogin
 } = AuthMiddleware;
 
 const {
-  signup,
+  signup, login
 } = AuthController;
 
 router.post('/signup', onSignup, signup);
+router.post('/login', onLogin, login);
 export default router;
