@@ -71,81 +71,140 @@
                     }
                 }
             }
-        }
-    },
-        "requestBody": {
-            "userRegistration": {
-                "title": "User registration request",
-                "type": "object",
-                "properties": {
-                    "firstName": {
-                        "description": "First name of the user",
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "description": "Last name of the user",
-                        "type": "string"
-                    },
-                    "email": {
-                        "description": "Email of the user",
-                        "type": "string"
-                    },
-                    "password": {
-                        "description": "The Password of the user",
-                        "type": "string"
-                    },
-                    "birthDate": {
-                        "description": "The date of birth of user",
-                        "type": "date"
-                    },
-                    "gender": {
-                        "description": "The user's gender",
-                        "type": "string"
-
-                    },
-                    "phoneNumber": {
-                        "description": "The user's phone number",
-                        "type": "string"
-                    },
-                    "addressLine1": {
-                        "description": "The user's address",
-                        "type": "string"
-                    },
-                    "addressLine2": {
-                        "description": "The user's address",
-                        "type": "string"
-                    },
-                    "city": {
-                        "description": "The user's city",
-                        "type": "string"
-                    },
-                    "state": {
-                        "description": "The user's state",
-                        "type": "string"
-                    },
-                    "country": {
-                        "description": "The user's country",
-                        "type": "string"
+        },
+        "auth/login": {
+            "post": {
+                "description": "Login an existing user",
+                "summary": "Login a user to the application",
+                "tags": [
+                    "Auth"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing login information",
+                        "schema": {
+                            "$ref": "#/requestBody/userLogin"
+                        }
                     }
-                },
-                "example": {
-                    "firstName": "King",
-                    "lastName": "David",
-                    "email": "david@gmail.com",
-                    "password": "Elija455h",
-                    "gender": "male",
-                    "birthDate": "2010-01-01",
-                    "phoneNumber": "08063345598",
-                    "addressLine1": "No 34, cintro street",
-                    "addressLine2": "Northpoint drive Allen",
-                    "city": "Gidi",
-                    "state": "Lagos",
-                    "country": "Nigeria"
-                  },
-                "required": [
-                    "firstName, lastName, email, password"
-                ]
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User login successfully"
+                    },
+                    "401": {
+                        "description": "invalid inputs"
+                    },
+                    "404": {
+                        "description": "User with email does not exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         }
+    },
+    "requestBody": {
+        "userRegistration": {
+            "title": "User registration request",
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "description": "First name of the user",
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "Last name of the user",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "Email of the user",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "The Password of the user",
+                    "type": "string"
+                },
+                "birthDate": {
+                    "description": "The date of birth of user",
+                    "type": "date"
+                },
+                "gender": {
+                    "description": "The user's gender",
+                    "type": "string"
+
+                },
+                "phoneNumber": {
+                    "description": "The user's phone number",
+                    "type": "string"
+                },
+                "addressLine1": {
+                    "description": "The user's address",
+                    "type": "string"
+                },
+                "addressLine2": {
+                    "description": "The user's address",
+                    "type": "string"
+                },
+                "city": {
+                    "description": "The user's city",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "The user's state",
+                    "type": "string"
+                },
+                "country": {
+                    "description": "The user's country",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "firstName": "King",
+                "lastName": "David",
+                "email": "david@gmail.com",
+                "password": "Elija455h",
+                "gender": "male",
+                "birthDate": "2010-01-01",
+                "phoneNumber": "08063345598",
+                "addressLine1": "No 34, cintro street",
+                "addressLine2": "Northpoint drive Allen",
+                "city": "Gidi",
+                "state": "Lagos",
+                "country": "Nigeria"
+                },
+            "required": [
+                "firstName, lastName, email, password"
+            ]
+        },
+        "userLogin": {
+            "title": "User login request",
+            "type": "object",
+            "properties": {
+                "email": {
+                    "description": "Email of the user",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "The Password of the user",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "email": "david@gmail.com",
+                "password": "Elija455h"
+                },
+            "required": [
+                "email, password"
+            ]
+        }
     }
+}
     
