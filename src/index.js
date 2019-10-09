@@ -1,6 +1,8 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-unused-vars */
 import '@babel/polyfill';
 import express from 'express';
+import passport from 'passport';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import morgan from 'morgan';
@@ -14,6 +16,7 @@ const production = env.NODE_ENV === 'production';
 // Create global app object
 const app = express();
 
+app.use(passport.initialize());
 app.use(cors());
 app.use(cookieParser());
 
