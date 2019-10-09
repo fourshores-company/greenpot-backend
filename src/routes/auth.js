@@ -8,9 +8,10 @@ const {
 } = AuthMiddleware;
 
 const {
-  signup, login
+  signup, login, verifyEmail
 } = AuthController;
 
 router.post('/signup', onSignup, signup);
 router.post('/login', onLogin, login);
+router.get('/verify', verifyEmail);
 export default router;

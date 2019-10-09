@@ -1,17 +1,23 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import server from '..';
+import { Toolbox } from '../utils';
 import { newUser } from './dummyData';
+
+const {
+  createToken,
+} = Toolbox;
 
 chai.use(chaiHttp);
 
-
+let userInDatabase;
 describe('Authentication route on signup \n POST /v1.0/api/auth/signup', () => {
   it('should successfully signup a new user', async () => {
     const response = await chai
       .request(server)
       .post('/v1.0/api/auth/signup')
       .send(newUser);
+    userInDatabase = response.body.data.user;
     expect(response).to.have.status(201);
     expect(response.body.data).to.be.a('object');
     expect(response.body.data.user.token).to.be.a('string');
@@ -74,5 +80,41 @@ describe('Authentication route on login \n POST /v1.0/api/auth/login', () => {
     expect(response).to.have.status(404);
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal(`User with email "${loginUser.email}" does not exists. Please check your details`);
+  });
+});
+
+describe('Authentication route for email verification \n GET/v1.0/api/auth/verify?token=', () => {
+  it('should return a success response of 200 when user has been verified', async () => {
+    const { firstName, token } = userInDatabase;
+    const response = await chai
+      .request(server)
+      .get(`/v1.0/api/auth/verify?token=${token}`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+    expect(response.body.data.message).to.be.a('string');
+    expect(response.body.data.message).to.equal(`Welome ${firstName}, you have been verified!`);
+  });
+  it('should return 400 error if there is no token in url', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/auth/verify?token=');
+    expect(response).to.have.status(400);
+    expect(response.body.error.message).to.equal('We could not verify your email, the token provided was invalid');
+  });
+  it('should return an error if an invalid token is in url', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/auth/verify?token=jhgvgfghjy67809hiuh7g.kbyu');
+    expect(response).to.have.status(400);
+    expect(response.body.error.message).to.equal('We could not verify your email, the token provided was invalid');
+  });
+  it('should return a 404 error if user in verification token does not exist', async () => {
+    const token = createToken({ id: 70 });
+    const response = await chai
+      .request(server)
+      .get(`/v1.0/api/auth/verify?token=${token}`);
+    expect(response).to.have.status(404);
+    expect(response.body.error.message).to.equal('Sorry, we do not recognise this user in our database');
   });
 });
