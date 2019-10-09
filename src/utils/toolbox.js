@@ -117,17 +117,15 @@ export default class Toolbox {
    * Generates email verification link
    * @static
    * @param { Request } req - Request object
-   * @param { object } options - Contains user's data to be signed within Token.
-   * @param { string } options.id - User's unique ID.
-   * @param { string } options.email - User's email.
-   * @param { string } options.role - User's role.
+   * @param { string } id - User's unique ID.
+   * @param { string } email - User's email.
    * @memberof Toolbox
    * @returns {URL} - Verification link.
    */
-  static createVerificationLink(req, { id, email, role }) {
-    const token = Toolbox.generateToken({ id, email, role });
+  static createVerificationLink(req, { id, email }) {
+    const token = Toolbox.createToken({ id, email });
     const host = req.hostname === 'localhost' ? `${req.hostname}:${PORT}` : req.hostname;
-    return `${req.protocol}://${host}/api/auth/verify?token=${token}`;
+    return `${req.protocol}://${host}/v1.0/api/auth/verify?token=${token}`;
   }
 
   /**

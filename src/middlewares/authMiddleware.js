@@ -3,7 +3,7 @@ import { Toolbox } from '../utils';
 import { UserService } from '../services';
 
 const {
-  errorResponse,
+  errorResponse, checkToken, verifyToken
 } = Toolbox;
 const {
   validateUserSignup, validateUserLogin
@@ -43,7 +43,7 @@ export default class AuthMiddleware {
   }
 
   /**
-   * Middleware for user validation during login
+   * Method for user validation during login
    * @param {object} req
    * @param {object} res
    * @param {object} next
@@ -65,6 +65,34 @@ export default class AuthMiddleware {
       }
     } catch (error) {
       errorResponse(res, { code: 400, message: error });
+    }
+  }
+
+  /**
+   * Method for checking user validation status
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - returns error or response object
+   * @memberof AuthMiddleware
+   */
+  static async checkUserValidation(req, res, next) {
+    try {
+      const token = checkToken(req);
+      if (!token) return errorResponse(res, { code: 401, message: 'Access denied, Token required' });
+      const { tokenData: email } = verifyToken(token);
+      const member = await findUser({ email });
+      if (member) {
+        if (member.isVerified) {
+          next();
+        } else {
+          errorResponse(res, { code: 401, message: 'You email needs to be verified to access this route' });
+        }
+      } else {
+        errorResponse(res, { code: 404, message: 'User does not exists. Please check your details' });
+      }
+    } catch (error) {
+      errorResponse(res, {});
     }
   }
 }

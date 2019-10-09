@@ -1,4 +1,4 @@
-import { Toolbox } from '../utils';
+import { Toolbox, ApiError } from '../utils';
 import db from '../models';
 
 const { hashPassword } = Toolbox;
@@ -30,5 +30,18 @@ export default class UserService {
    */
   static async findUser(keys) {
     return User.findOne({ where: keys });
+  }
+
+  /**
+   * update user key given an option
+   * @param {object} updateData - data to update
+   * @param {object} keys - query key to update
+   * @returns {promise-object | error} A promise object with user detail
+   * @memberof UserService
+   */
+  static async updateBykey(updateData, keys) {
+    const [rowaffected, [user]] = await User.update(updateData, { returning: true, where: keys });
+    if (!rowaffected) throw new ApiError(404, 'Not Found');
+    return user.dataValues;
   }
 }
