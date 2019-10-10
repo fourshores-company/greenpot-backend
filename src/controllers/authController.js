@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { UserService } from '../services';
 import { Toolbox, Mailer } from '../utils';
 
@@ -81,6 +82,23 @@ export default class AuthController {
         return errorResponse(res, { code: 404, message: 'Sorry, we do not recognise this user in our database' });
       }
       errorResponse(res, {});
+    }
+  }
+
+  /**
+   * login user in with google
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - a JSON response
+   */
+  static socialLogin(req, res) {
+    const { id, email } = req.user;
+    try {
+      const token = createToken({ id, email });
+      res.cookie('token', token, { maxAge: 70000000, httpOnly: true });
+      successResponse(res, { message: 'Successfully logged in via Google' }, 200);
+    } catch (error) {
+      errorResponse(res, { code: error.status, message: error.message });
     }
   }
 }

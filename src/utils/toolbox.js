@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import joi from '@hapi/joi';
