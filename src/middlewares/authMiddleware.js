@@ -1,9 +1,10 @@
 import { AuthValidation } from '../validations';
 import { Toolbox } from '../utils';
 import { UserService } from '../services';
+import { changePasswordSchema } from '../validations/passwordValidation';
 
 const {
-  errorResponse, checkToken, verifyToken
+  errorResponse, checkToken, verifyToken, validate
 } = Toolbox;
 const {
   validateUserSignup, validateUserLogin
@@ -65,6 +66,50 @@ export default class AuthMiddleware {
       }
     } catch (error) {
       errorResponse(res, { code: 400, message: error });
+    }
+  }
+
+  /**
+   * Method for user validation during password reset
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - returns error or response object
+   * @memberof AuthMiddleware
+   */
+  static async onPasswordReset(req, res, next) {
+    try {
+      const { error } = validate(req.body, changePasswordSchema);
+      if (error) {
+        const message = 'Please make sure the passwords match';
+        return errorResponse(res, { code: 400, message });
+      }
+      next();
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * Middleware for user authentication
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   * @returns {object} - next
+   * @memberof AuthMiddleware
+   */
+  static authenticate(req, res, next) {
+    try {
+      const token = checkToken(req);
+      if (!token) return errorResponse(res, { code: 401, message: 'Access denied, Token required' });
+      const values = verifyToken(token);
+      req.tokenData = values;
+      next();
+    } catch (error) {
+      if (error.message === 'Invalid Token') {
+        return errorResponse(res, { code: 400, message: 'We could not verify your email, the token provided was invalid' });
+      }
+      errorResponse(res, {});
     }
   }
 
