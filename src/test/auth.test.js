@@ -118,3 +118,59 @@ describe('Authentication route for email verification \n GET/v1.0/api/auth/verif
     expect(response.body.error.message).to.equal('Sorry, we do not recognise this user in our database');
   });
 });
+
+describe('Authentication routes for password reset \n POST /v1.0/api/auth/reset-password', () => {
+  it('should return a success response of 200 when a password has been reset', async () => {
+    const { token } = userInDatabase;
+    const resetValues = { password: 'defc34.Ase', confirmPassword: 'defc34.Ase' };
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/auth/reset-password')
+      .set('Cookie', `token=${token};`)
+      .send(resetValues);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+    expect(response.body.data.message).to.be.a('string');
+    expect(response.body.data.message).to.equal('Password has been changed successfully');
+  });
+  it('should return a 400 error when password validation does not pass', async () => {
+    const { token } = userInDatabase;
+    const resetValues = { password: 'defc34.Ase', confirmPassword: 'defc34.Dse' };
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/auth/reset-password')
+      .set('Cookie', `token=${token};`)
+      .send(resetValues);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Please make sure the passwords match');
+  });
+  it('should return a 401 error when no token is detected', async () => {
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/auth/reset-password')
+      .set('Cookie', 'token=;');
+    expect(response).to.have.status(401);
+    expect(response.body.error.message).to.equal('Access denied, Token required');
+  });
+  it('should return a 400 error when an invalid token is detected', async () => {
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/auth/reset-password')
+      .set('Cookie', 'token=sdfrfvrfvr546;');
+    expect(response).to.have.status(400);
+    expect(response.body.error.message).to.equal('We could not verify your email, the token provided was invalid');
+  });
+  it('should return a 404 error if user in token does not exist', async () => {
+    const token = createToken({ id: 70 });
+    const resetValues = { password: 'defc34.Dse', confirmPassword: 'defc34.Dse' };
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/auth/reset-password')
+      .set('Cookie', `token=${token};`)
+      .send(resetValues);
+    expect(response).to.have.status(404);
+    expect(response.body.error.message).to.equal('Sorry, we do not recognise this user in our database');
+  });
+});

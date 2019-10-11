@@ -6,11 +6,11 @@ import { AuthController } from '../controllers';
 
 const router = Router();
 const {
-  onSignup, onLogin
+  onSignup, onLogin, onPasswordReset, authenticate,
 } = AuthMiddleware;
 
 const {
-  signup, login, verifyEmail, socialLogin
+  signup, login, verifyEmail, socialLogin, resetPassword
 } = AuthController;
 
 router.post('/signup', onSignup, signup);
@@ -20,5 +20,6 @@ router.get('/google', passport.authenticate('google', { scope: ['email', 'profil
 router.get('/google/callback',
   passport.authenticate('google'),
   socialLogin);
+router.post('/reset-password', authenticate, onPasswordReset, resetPassword);
 
 export default router;

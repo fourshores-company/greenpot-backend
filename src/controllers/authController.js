@@ -4,7 +4,7 @@ import { Toolbox, Mailer } from '../utils';
 
 const {
   successResponse, errorResponse, createToken, comparePassword,
-  verifyToken
+  verifyToken, hashPassword
 } = Toolbox;
 const {
   sendVerificationEmail
@@ -99,6 +99,29 @@ export default class AuthController {
       successResponse(res, { message: 'Successfully logged in via Google' }, 200);
     } catch (error) {
       errorResponse(res, { code: error.status, message: error.message });
+    }
+  }
+
+  /**
+   * reset user password
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - a JSON response
+   */
+  static async resetPassword(req, res) {
+    try {
+      const { password } = req.body;
+      const hasedhPassword = hashPassword(password);
+      const { id } = req.tokenData;
+      const user = await updateBykey({ password: hasedhPassword }, { id });
+      if (user) {
+        successResponse(res, { message: 'Password has been changed successfully' });
+      }
+    } catch (error) {
+      if (error.message === 'Not Found') {
+        return errorResponse(res, { code: 404, message: 'Sorry, we do not recognise this user in our database' });
+      }
+      errorResponse(res, {});
     }
   }
 }
