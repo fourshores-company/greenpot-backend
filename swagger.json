@@ -27,10 +27,6 @@
         {
             "name": "Auth",
             "description": "Endpoint for Authentication"
-        },
-        {
-            "name": "Users",
-            "description": "Endpoint for Users"
         }
     ],
     "paths": {
@@ -103,6 +99,44 @@
                     },
                     "404": {
                         "description": "User with email does not exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "auth/reset-password": {
+            "post": {
+                "description": "reset password of a logged in user",
+                "summary": "A user that's logged in should be able to reset his/her password",
+                "tags": [
+                    "Auth"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing password reset information",
+                        "schema": {
+                            "$ref": "#/requestBody/passwordReset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Passwords changed succesfully"
+                    },
+                    "401": {
+                        "description": "invalid inputs"
+                    },
+                    "404": {
+                        "description": "User does not exists"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -203,6 +237,27 @@
                 },
             "required": [
                 "email, password"
+            ]
+        },
+        "passwordReset": {
+            "title": "User password reset request",
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "The new Password of the user",
+                    "type": "string"
+                },
+                "confirmPassword": {
+                    "description": "The new Password of the user",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "password": "defc34.Ase",
+                "confirmPassword": "defc34.Asedd"
+            },
+            "required": [
+                "password, confirmPassword"
             ]
         }
     }
