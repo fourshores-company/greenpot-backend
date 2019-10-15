@@ -2,4 +2,5 @@
 [![Database hosted by ElephantSQL](https://img.shields.io/badge/Database%20Host-ElephantSQL-blue)](https://www.elephantsql.com)
 [![Deployed on Heroku](https://img.shields.io/badge/Deployed%20on-Heroku-purple)](https://greenpot-api.herokuapp.com)
 [![Build Status](https://travis-ci.org/fourshores-company/greenpot-backend.svg?branch=develop)](https://travis-ci.org/fourshores-company/greenpot-backend)
+[![Coverage Status](https://coveralls.io/repos/github/fourshores-company/greenpot-backend/badge.svg)](https://coveralls.io/github/fourshores-company/greenpot-backend)
 # greenpot-backend
