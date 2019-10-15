@@ -68,7 +68,7 @@
                 }
             }
         },
-        "auth/login": {
+        "/auth/login": {
             "post": {
                 "description": "Login an existing user",
                 "summary": "Login a user to the application",
@@ -106,7 +106,7 @@
                 }
             }
         },
-        "auth/reset-password": {
+        "/auth/reset-password": {
             "post": {
                 "description": "reset password of a logged in user",
                 "summary": "A user that's logged in should be able to reset his/her password",
@@ -137,6 +137,54 @@
                     },
                     "404": {
                         "description": "User does not exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/profile/{userId}": {
+            "put": {
+                "description": "Updates a single user profile",
+                "summary": "User can update the profile details",
+                "tags": [
+                    "Users"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "description": "The Id of the user to be updated"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing user update",
+                        "schema": {
+                            "$ref": "#/requestBody/updateProfile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    },
+                    "404": {
+                        "description": "User Not Found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -259,6 +307,29 @@
             "required": [
                 "password, confirmPassword"
             ]
+        },
+        "updateProfile": {
+            "title": "Update User",
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "description": "First name of the user",
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "Last name of the user",
+                    "type": "string"
+                },
+                "gender": {
+                    "description": "Use gender",
+                    "type": "integer"
+                }
+            },
+            "example": {
+                "firstName": "first name",
+                "lastName": "last name",
+                "gender": "male"
+            }
         }
     }
 }
