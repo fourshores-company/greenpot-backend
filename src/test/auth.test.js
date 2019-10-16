@@ -160,7 +160,7 @@ describe('Authentication routes for password reset \n POST /v1.0/api/auth/reset-
       .post('/v1.0/api/auth/reset-password')
       .set('Cookie', 'token=sdfrfvrfvr546;');
     expect(response).to.have.status(400);
-    expect(response.body.error.message).to.equal('We could not verify your email, the token provided was invalid');
+    expect(response.body.error.message).to.equal('The token provided was invalid');
   });
   it('should return a 404 error if user in token does not exist', async () => {
     const token = createToken({ id: 70 });
@@ -172,5 +172,31 @@ describe('Authentication routes for password reset \n POST /v1.0/api/auth/reset-
       .send(resetValues);
     expect(response).to.have.status(404);
     expect(response.body.error.message).to.equal('Sorry, we do not recognise this user in our database');
+  });
+});
+describe('Authentication routes for password reset email link \n GET /v1.0/api/auth/reset-password/emai?token=', () => {
+  it('should return an error if password reset link token is invalid', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/auth/reset-password/email?token=sdfcvertgv9');
+    expect(response).to.have.status(400);
+    expect(response.body.error.message).to.equal('The token provided was invalid');
+  });
+  it('should return an error if password reset link token is not provided', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/auth/reset-password/email?token=');
+    expect(response).to.have.status(400);
+    expect(response.body.error.message).to.equal('The token provided was invalid');
+  });
+  it('should return a success when a password reset link has been verified', async () => {
+    const { token } = userInDatabase;
+    const response = await chai
+      .request(server)
+      .get(`/v1.0/api/auth/reset-password/email?token=${token}`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+    expect(response.body.data.message).to.be.a('string');
   });
 });

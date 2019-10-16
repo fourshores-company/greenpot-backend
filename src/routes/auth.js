@@ -10,7 +10,8 @@ const {
 } = AuthMiddleware;
 
 const {
-  signup, login, verifyEmail, socialLogin, resetPassword
+  signup, login, verifyEmail, socialLogin, resetPassword, resetPasswordByEmail,
+  verifyPasswordReset
 } = AuthController;
 
 router.post('/signup', onSignup, signup);
@@ -21,5 +22,7 @@ router.get('/google/callback',
   passport.authenticate('google'),
   socialLogin);
 router.post('/reset-password', authenticate, onPasswordReset, resetPassword);
+router.post('/reset-password/email', onPasswordReset, resetPasswordByEmail);
+router.get('/reset-password/email', verifyPasswordReset);
 
 export default router;

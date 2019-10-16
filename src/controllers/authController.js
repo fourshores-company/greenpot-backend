@@ -7,10 +7,10 @@ const {
   verifyToken, hashPassword
 } = Toolbox;
 const {
-  sendVerificationEmail
+  sendVerificationEmail, sendPasswordResetEmail
 } = Mailer;
 const {
-  addUser, updateBykey
+  addUser, updateBykey, findUser
 } = UserService;
 /**
  * Colllection of  methids for controlling user authentications
@@ -122,6 +122,48 @@ export default class AuthController {
         return errorResponse(res, { code: 404, message: 'Sorry, we do not recognise this user in our database' });
       }
       errorResponse(res, {});
+    }
+  }
+
+  /**
+   * send password reset email
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - a JSON response
+   */
+  static async resetPasswordByEmail(req, res) {
+    try {
+      const { email } = req.body;
+      const user = await findUser({ email });
+      if (!user) return errorResponse(res, { code: 404, message: 'Sorry, we do not recognise this user in our database' });
+      const emailSent = await sendPasswordResetEmail(req, user);
+      if (emailSent) return successResponse(res, { message: 'A password reset link has been sent to your email' });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * verify password reset link
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - a JSON response
+   */
+  static async verifyPasswordReset(req, res) {
+    try {
+      const { token } = req.query;
+      res.cookie('token', token, { maxAge: 70000000, httpOnly: true });
+      const tokenData = verifyToken(token);
+      if (tokenData) {
+        const url = `${req.protocol}s://${req.get('host')}/v1.0/api/auth/reset-password`;
+        successResponse(res, { message: `success, redirect to ${url} with password objects` });
+      }
+    } catch (error) {
+      if (error.message === 'Invalid Token') {
+        return errorResponse(res, { code: 400, message: 'The token provided was invalid' });
+      }
+      const status = error.status || 500;
+      errorResponse(res, { code: status, message: `could not verify, ${error.message}` });
     }
   }
 }
