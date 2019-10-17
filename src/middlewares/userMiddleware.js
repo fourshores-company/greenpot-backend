@@ -19,7 +19,7 @@ export default class UserMiddleware {
    * @param {object} next
    * @returns {object} - return and object {error or response}
    */
-  static async onUpdateProfile(req, res, next) {
+  static async profileCheck(req, res, next) {
     try {
       const { userId } = req.params;
       const token = checkToken(req);
