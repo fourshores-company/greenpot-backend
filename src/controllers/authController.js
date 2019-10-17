@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import { UserService } from '../services';
 import { Toolbox, Mailer } from '../utils';
 

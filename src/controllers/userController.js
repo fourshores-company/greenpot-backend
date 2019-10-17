@@ -6,7 +6,7 @@ const {
 } = Toolbox;
 
 const {
-  updateBykey, findUser
+  updateBykey, findUser, deleteBykey
 } = UserService;
 /**
  * Collection of classes cor controlling user profiles
@@ -42,6 +42,26 @@ export default class UserController {
       const id = req.params.userId;
       const user = await findUser({ id });
       successResponse(res, { user });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * delete a user's account
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with a message informing the user that the account has been deleted.
+   * @memberof UserController
+   */
+  static async deleteAccount(req, res) {
+    try {
+      const id = req.params.userId;
+      await deleteBykey({ id });
+      // Clear the token from the cookie
+      res.clearCookie('token', { maxAge: 70000000, httpOnly: true });
+      // Redirect back to home page after deleting the account
+      res.redirect(200, '/');
     } catch (error) {
       errorResponse(res, {});
     }

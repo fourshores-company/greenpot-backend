@@ -44,4 +44,16 @@ export default class UserService {
     if (!rowaffected) throw new ApiError(404, 'Not Found');
     return user.dataValues;
   }
+
+  /**
+   * delete user key given an option
+   * @param {object} keys - query key to delete
+   * @returns {promise-object | error} A number showing how many rows were deleted
+   * @memberof UserService
+   */
+  static async deleteBykey(keys) {
+    const numberOfRowsDeleted = await User.destroy({ where: keys });
+    if (!numberOfRowsDeleted) throw new ApiError(404, 'Not Found');
+    return true;
+  }
 }
