@@ -1,7 +1,7 @@
 import { AuthValidation } from '../validations';
 import { Toolbox } from '../utils';
 import { UserService } from '../services';
-import { changePasswordSchema } from '../validations/passwordValidation';
+import { changePasswordSchema, passwordResetEmailSchema } from '../validations/passwordValidation';
 
 const {
   errorResponse, checkToken, verifyToken, validate
@@ -79,7 +79,13 @@ export default class AuthMiddleware {
    */
   static async onPasswordReset(req, res, next) {
     try {
-      const { error } = validate(req.body, changePasswordSchema);
+      let schema;
+      if (req.body.email) {
+        schema = passwordResetEmailSchema;
+      } else {
+        schema = changePasswordSchema;
+      }
+      const { error } = validate(req.body, schema);
       if (error) {
         const message = 'Please make sure the passwords match';
         return errorResponse(res, { code: 400, message });
@@ -107,7 +113,7 @@ export default class AuthMiddleware {
       next();
     } catch (error) {
       if (error.message === 'Invalid Token') {
-        return errorResponse(res, { code: 400, message: 'We could not verify your email, the token provided was invalid' });
+        return errorResponse(res, { code: 400, message: 'The token provided was invalid' });
       }
       errorResponse(res, {});
     }

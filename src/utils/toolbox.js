@@ -130,6 +130,19 @@ export default class Toolbox {
   }
 
   /**
+   * Generates email password reset link
+   * @param {*} req
+   * @param {*} id
+   * @param {*} email
+   * @returns {URL} - password reset link
+   * @memberof Toolbox
+   */
+  static createPasswordResetLink(req, { id, email }) {
+    const token = Toolbox.createToken({ id, email }, '5h');
+    return `${req.protocol}://${req.get('host')}/v1.0/api/auth/reset-password/email?token=${token}`;
+  }
+
+  /**
    * Validates a value using the given Joi schema
    * @param {object} value
    * @param {Joi.SchemaLike} schema
