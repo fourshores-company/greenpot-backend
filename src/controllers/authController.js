@@ -1,4 +1,4 @@
-import { UserService } from '../services';
+import { UserService, RoleService } from '../services';
 import { Toolbox, Mailer } from '../utils';
 
 const {
@@ -11,6 +11,9 @@ const {
 const {
   addUser, updateBykey, findUser
 } = UserService;
+const {
+  assignRole, findRoleUser
+} = RoleService;
 /**
  * Colllection of  methids for controlling user authentications
  * @class AuthController
@@ -28,10 +31,11 @@ export default class AuthController {
     try {
       const { body } = req;
       const user = await addUser({ ...body });
-      user.token = createToken({ email: user.email, id: user.id });
+      const assignedRole = await assignRole(user.id, 2);
+      user.token = createToken({ email: user.email, id: user.id, roleId: 2 });
       const emailSent = await sendVerificationEmail(req, user);
       res.cookie('token', user.token, { maxAge: 70000000, httpOnly: true });
-      return successResponse(res, { user, emailSent }, 201);
+      return successResponse(res, { user, assignedRole, emailSent }, 201);
     } catch (error) {
       errorResponse(res, {});
     }
@@ -48,10 +52,11 @@ export default class AuthController {
     try {
       const { email, password } = req.body;
       const user = req.member;
+      const { roleId } = await findRoleUser({ userId: user.id });
       if (!comparePassword(password, user.password)) {
         return errorResponse(res, { code: 401, message: 'This password is incorrect' });
       }
-      user.token = createToken({ email, id: user.id });
+      user.token = createToken({ email, id: user.id, roleId });
       res.cookie('token', user.token, { maxAge: 70000000, httpOnly: true });
       return successResponse(res, { message: 'Login Successful' });
     } catch (error) {

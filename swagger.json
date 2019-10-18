@@ -266,6 +266,45 @@
                     }
                 }
             }
+        },
+        "/user/role": {
+            "patch":{
+                "description": "user roles can be set given the right parameters",
+                "summary": "A User's role can be set to either user or admin",
+                "tags": [
+                    "Users"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing user role setting",
+                        "schema": {
+                            "$ref": "#/requestBody/roleSetting"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {
@@ -405,6 +444,27 @@
                 "lastName": "last name",
                 "gender": "male"
             }
+        },
+        "roleSetting":{
+            "title": "User Role Setting",
+            "type": "object",
+            "properties":{
+                "roleId": {
+                    "description": "id correspondin to role",
+                    "type": "integer"
+                },
+                "adminKey": {
+                    "description": "Administrator key needed to set role",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "roleId": 1,
+                "adminKey": "ADMIN_KEY"
+            },
+            "required": [
+                "roleId, adminKey"
+            ]
         }
     }
 }

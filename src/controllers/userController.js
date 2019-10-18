@@ -1,6 +1,10 @@
-import { UserService } from '../services';
+import { UserService, RoleService } from '../services';
 import { Toolbox } from '../utils';
+import env from '../config/env';
 
+const {
+  ADMIN_KEY
+} = env;
 const {
   successResponse, errorResponse
 } = Toolbox;
@@ -8,6 +12,9 @@ const {
 const {
   updateBykey, findUser, deleteBykey
 } = UserService;
+const {
+  updateRole
+} = RoleService;
 /**
  * Collection of classes cor controlling user profiles
  * @class UserController
@@ -51,7 +58,8 @@ export default class UserController {
    * delete a user's account
    * @param {object} req
    * @param {object} res
-   * @returns {JSON } A JSON response with a message informing the user that the account has been deleted.
+   * @returns {JSON } A JSON response
+   * with a message informing the user that the account has been deleted.
    * @memberof UserController
    */
   static async deleteAccount(req, res) {
@@ -62,6 +70,27 @@ export default class UserController {
       res.clearCookie('token', { maxAge: 70000000, httpOnly: true });
       // Redirect back to home page after deleting the account
       res.redirect(200, '/');
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+ * Assign admin
+ * @param {object} req
+ * @param {object} res
+ * @returns {JSON} - A jsom response with role details
+ * @memberof UserController
+ */
+  static async assignRole(req, res) {
+    try {
+      const { roleId, adminKey } = req.body;
+      const { id } = req.tokenData;
+      if (adminKey === ADMIN_KEY) {
+        const updatedRole = await updateRole(id, roleId);
+        return successResponse(res, { message: 'User role update successful', updatedRole });
+      }
+      return errorResponse(res, { code: 400, message: 'Incorrect admin key' });
     } catch (error) {
       errorResponse(res, {});
     }

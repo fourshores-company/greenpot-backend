@@ -2,8 +2,10 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import server from '..';
 import { Toolbox } from '../utils';
-import { anotherUser, userInDatabase, anotherUser2 } from './dummyData';
+import { anotherUser, userInDatabase, secondUser, thirdUser } from './dummyData';
+import env from '../config/env';
 
+const { ADMIN_KEY } = env;
 const { createToken } = Toolbox;
 
 chai.use(chaiHttp);
@@ -40,6 +42,7 @@ describe('User route on profile update \n PUT /v1.0/api/user/profile/{id}', () =
     expect(response.body.status).to.equal('fail');
   });
 });
+
 describe('User route get profile \n GET /v1.0/api/user/profile/{id}', () => {
   it('should succesfully get a user profile', async () => {
     const response = await chai
@@ -84,7 +87,7 @@ describe('User route get profile \n GET /v1.0/api/user/profile/{id}', () => {
 describe('A user can delete their account', () => {
   let user2;
   it('should successfully delete a logged in user\'s account', async () => {
-    user2 = await userInDatabase(anotherUser2);
+    user2 = await userInDatabase(secondUser);
     const response = await chai
       .request(server)
       .delete(`/v1.0/api/user/${user2.id}`)
@@ -113,5 +116,69 @@ describe('A user can delete their account', () => {
       .set('Cookie', `token=${user2.token}`);
     expect(response).to.have.status(401);
     expect(response.body.status).to.equal('fail');
+  });
+});
+
+describe('User Role settings route \n POST /v1.0/api/user/role', () => {
+  let user3;
+  const load = { roleId: 2, adminKey: ADMIN_KEY };
+  it('should throw an error if uan invalid admin key is given', async () => {
+    user3 = await userInDatabase(thirdUser);
+    const dummy = { roleId: 1, adminKey: 456 };
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/user/role')
+      .set('Cookie', `token=${user3.token}`)
+      .send(dummy);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Admin key must be a string');
+  });
+  it('should throw an error if an invalid role id is given', async () => {
+    const dummy = { roleId: 3, adminKey: 456 };
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/user/role')
+      .set('Cookie', `token=${user3.token}`)
+      .send(dummy);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Please enter a valid role id');
+  });
+  it('Should throw an error if the admin key does not match', async () => {
+    const dummy = { roleId: 2, adminKey: 'dfvfg' };
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/user/role')
+      .set('Cookie', `token=${user3.token}`)
+      .send(dummy);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Incorrect admin key');
+  });
+  it('Should throw an error if the user in token is not found', async () => {
+    const token = createToken({ id: 70, email: 'retrs@greenpot.com', roleId: 3 });
+    const dummy = { roleId: 2, adminKey: ADMIN_KEY };
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/user/role')
+      .set('Cookie', `token=${token}`)
+      .send(dummy);
+    console.log('response', response.body);
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('User does not exist');
+  });
+  it('should successfully update a users role given the right parameters', async () => {
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/user/role')
+      .set('Cookie', `token=${user3.token}`)
+      .send(load);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data.updatedRole).to.be.a('object');
+    expect(response.body.data.message).to.be.a('string');
+    expect(response.body.data.message).to.equal('User role update successful');
   });
 });
