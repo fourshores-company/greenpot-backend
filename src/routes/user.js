@@ -9,7 +9,6 @@ const { profileCheck, onDeleteAccount } = UserMiddleware;
 const { updateProfile, getProfile, deleteAccount } = UserController;
 router.put('/profile/:userId', authenticate, profileCheck, updateProfile);
 router.get('/profile/:userId', authenticate, profileCheck, getProfile);
-router.put('/profile/:userId', authenticate, profileCheck, updateProfile);
-router.delete('/account/:userId', authenticate, onDeleteAccount, deleteAccount);
+router.delete('/:userId', authenticate, onDeleteAccount, deleteAccount);
 
 export default router;

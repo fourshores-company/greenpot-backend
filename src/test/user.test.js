@@ -87,14 +87,14 @@ describe('A user can delete their account', () => {
     user2 = await userInDatabase(anotherUser2);
     const response = await chai
       .request(server)
-      .delete(`/v1.0/api/user/account/${user2.id}`)
+      .delete(`/v1.0/api/user/${user2.id}`)
       .set('Cookie', `token=${user2.token};`);
     expect(response).to.have.status(200);
   });
   it('should return an error if the userId is not in the proper format', async () => {
     const response = await chai
       .request(server)
-      .delete('/v1.0/api/user/account/djjs')
+      .delete('/v1.0/api/user/djjs')
       .set('Cookie', `token=${user2.token}`);
     expect(response).to.have.status(400);
     expect(response.body.status).to.equal('fail');
@@ -102,14 +102,14 @@ describe('A user can delete their account', () => {
   it('should return an error if the userId does not exist', async () => {
     const response = await chai
       .request(server)
-      .delete('/v1.0/api/user/account/500')
+      .delete('/v1.0/api/user/500')
       .set('Cookie', `token=${user2.token}`);
     expect(response).to.have.status(400);
   });
   it('should return an error if a user tries to delete a profile that\'s not his/hers', async () => {
     const response = await chai
       .request(server)
-      .delete(`/v1.0/api/user/account/${user.id}`)
+      .delete(`/v1.0/api/user/${user.id}`)
       .set('Cookie', `token=${user2.token}`);
     expect(response).to.have.status(401);
     expect(response.body.status).to.equal('fail');

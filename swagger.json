@@ -231,7 +231,7 @@
                 }
             }
         },
-        "/user/account/{userId}": {
+        "/user/{userId}": {
             "delete": {
                 "description": "Deletes a single user profile",
                 "summary": "Users can delete their profile",
