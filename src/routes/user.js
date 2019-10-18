@@ -12,7 +12,7 @@ const {
 const {
   updateProfile, getProfile, deleteAccount, assignRole
 } = UserController;
-const { user, admin, all } = PermissionsData;
+const { all } = PermissionsData;
 
 router.put('/profile/:userId', authenticate, profileCheck, updateProfile);
 router.get('/profile/:userId', authenticate, profileCheck, getProfile);

@@ -164,7 +164,6 @@ describe('User Role settings route \n POST /v1.0/api/user/role', () => {
       .patch('/v1.0/api/user/role')
       .set('Cookie', `token=${token}`)
       .send(dummy);
-    console.log('response', response.body);
     expect(response).to.have.status(404);
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal('User does not exist');

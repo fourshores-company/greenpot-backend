@@ -38,7 +38,9 @@ export default class RoleService {
    * @memberof RoleService
    */
   static async updateRole(userId, roleId) {
-    const [rowaffected, [user]] = await RoleUser.update({ roleId }, { returning: true, where: { userId } });
+    const [rowaffected, [user]] = await RoleUser.update(
+      { roleId }, { returning: true, where: { userId } }
+    );
     if (!rowaffected) throw new ApiError(404, 'Not Found');
     return user.dataValues;
   }
