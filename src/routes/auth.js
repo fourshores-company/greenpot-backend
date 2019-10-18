@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import { Router } from 'express';
 import passport from '../config/passport';
 import { AuthMiddleware } from '../middlewares';

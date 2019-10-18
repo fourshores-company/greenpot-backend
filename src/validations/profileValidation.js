@@ -34,4 +34,18 @@ export default class ProfileValidation {
     if (error) throw error.details[0].context.label;
     return true;
   }
+
+  /**
+   * object for vvalidation user id
+   * @param {number} id - user id
+   * @returns {object | boolean} - returns an error object or valid boolean
+   */
+  static async validateUserId(id) {
+    const schema = {
+      id: joi.number().integer().min(1),
+    };
+    const { error } = joi.validate({ id }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
 }
