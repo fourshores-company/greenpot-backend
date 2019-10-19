@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import joi from '@hapi/joi';
 import passwordComplexity from 'joi-password-complexity';
 
 const complexityOPtions = {
@@ -10,17 +10,17 @@ const complexityOPtions = {
   symbol: 1,
   requirementCount: 3,
 };
-export const passwordResetEmailSchema = Joi.object().keys({
-  email: Joi.string()
+export const passwordResetEmailSchema = joi.object().keys({
+  email: joi.string()
     .email()
     .required()
 });
 
-export const changePasswordSchema = Joi.object().keys({
+export const changePasswordSchema = joi.object().keys({
   password: new passwordComplexity(complexityOPtions)
     .required(),
-  confirmPassword: Joi.string()
-    .valid(Joi.ref('password'))
+  confirmPassword: joi.string()
+    .valid(joi.ref('password'))
     .required()
     .options({
       language: {

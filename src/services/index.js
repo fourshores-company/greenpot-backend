@@ -1,3 +1,7 @@
 import UserService from './userService';
+import RoleService from './roleService';
 
-export { UserService };
+export {
+  UserService,
+  RoleService
+};
