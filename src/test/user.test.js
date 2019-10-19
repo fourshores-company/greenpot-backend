@@ -200,7 +200,6 @@ describe('User Role settings route \n PATCH /v1.0/api/user/assign-role', () => {
       .patch('/v1.0/api/user/assign-role')
       .set('Cookie', `token=${user.token}`)
       .send(roleLoad);
-    console.log('response: ', response.body);
     expect(response).to.have.status(403);
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
