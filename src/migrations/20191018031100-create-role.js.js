@@ -7,7 +7,7 @@ module.exports = {
       type: Sequelize.INTEGER
     },
     label: {
-      type: Sequelize.ENUM('admin', 'user'),
+      type: Sequelize.ENUM('superAdmin', 'admin', 'user'),
       allowNull: false,
       defaultValue: 'user'
     },

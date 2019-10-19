@@ -1,11 +1,15 @@
 module.exports = {
   up: (queryInterface) => queryInterface.bulkInsert('Roles', [{
+    label: 'superAdmin',
+    description: 'SuperAdmin has extensive priviledge in the application'
+  },
+  {
     label: 'admin',
-    description: 'Admin has extensive priviledge in the application'
+    description: 'admin with special priviledges'
   },
   {
     label: 'user',
-    description: 'user proviledge for greenpot application'
+    description: 'user priviledge for greenpot application'
   }]),
 
   down: (queryInterface) => queryInterface.bulkDelete('Roles', null, {})

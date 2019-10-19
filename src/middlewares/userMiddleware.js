@@ -1,5 +1,5 @@
 import { ProfileValidation } from '../validations';
-import adminSchema from '../validations/adminValidation';
+import { rolesSchema, superAdminSchema } from '../validations/adminValidation';
 import { Toolbox } from '../utils';
 import { UserService, RoleService } from '../services';
 
@@ -98,7 +98,8 @@ export default class UserMiddleware {
    */
   static async onAssign(req, res, next) {
     try {
-      const { error } = validate(req.body, adminSchema);
+      const schema = (req.body.email) ? rolesSchema : superAdminSchema;
+      const { error } = validate(req.body, schema);
       if (error) {
         const message = error.details[0].context.label;
         return errorResponse(res, { code: 400, message });

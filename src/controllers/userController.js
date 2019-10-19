@@ -76,21 +76,40 @@ export default class UserController {
   }
 
   /**
- * Assign admin
- * @param {object} req
- * @param {object} res
- * @returns {JSON} - A jsom response with role details
- * @memberof UserController
- */
-  static async assignRole(req, res) {
+   * Assign super admin
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - A jsom response with role details
+   * @memberof UserController
+   */
+  static async assignSuperAdmin(req, res) {
     try {
-      const { roleId, adminKey } = req.body;
+      const { adminKey } = req.body;
       const { id } = req.tokenData;
       if (adminKey === ADMIN_KEY) {
-        const updatedRole = await updateRole(id, roleId);
-        return successResponse(res, { message: 'User role update successful', updatedRole });
+        const updatedRole = await updateRole(id, 1);
+        return successResponse(res, { message: 'Successfully assigned as Super Admin', updatedRole });
       }
       return errorResponse(res, { code: 400, message: 'Incorrect admin key' });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * assign roles
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - A jsom response with role details
+   * @memberof UserController
+   */
+  static async assignRoles(req, res) {
+    try {
+      const { roleId, email } = req.body;
+      const user = await findUser({ email });
+      if (!user) return errorResponse(res, { code: 404, message: 'User does not exist' });
+      const updatedRole = await updateRole(user.id, roleId);
+      return successResponse(res, { message: 'Role update successful', updatedRole });
     } catch (error) {
       errorResponse(res, {});
     }

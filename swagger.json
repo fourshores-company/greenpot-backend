@@ -267,9 +267,9 @@
                 }
             }
         },
-        "/user/role": {
+        "/user/assign-role": {
             "patch":{
-                "description": "user roles can be set given the right parameters",
+                "description": "user roles can be set by a superAdmin given the right parameters",
                 "summary": "A User's role can be set to either user or admin",
                 "tags": [
                     "Users"
@@ -289,7 +289,46 @@
                         "required": true,
                         "description": "This is the request body object containing user role setting",
                         "schema": {
-                            "$ref": "#/requestBody/roleSetting"
+                            "$ref": "#/requestBody/assign-role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/user/assign-super": {
+            "patch":{
+                "description": "Assign super admin to application",
+                "summary": "A Super admin can be assinged to application",
+                "tags": [
+                    "Users"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing user role setting",
+                        "schema": {
+                            "$ref": "#/requestBody/assign-super"
                         }
                     }
                 ],
@@ -445,7 +484,7 @@
                 "gender": "male"
             }
         },
-        "roleSetting":{
+        "assign-role":{
             "title": "User Role Setting",
             "type": "object",
             "properties":{
@@ -453,19 +492,36 @@
                     "description": "id correspondin to role",
                     "type": "integer"
                 },
+                "email": {
+                    "description": "email of user to be set",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "roleId": 2,
+                "email": "danny@greenpot.com"
+            },
+            "required": [
+                "roleId, adminKey"
+            ]
+        },
+        "assign-super":{
+            "title": "Super Admin Role Setting",
+            "type": "object",
+            "properties":{
                 "adminKey": {
                     "description": "Administrator key needed to set role",
                     "type": "string"
                 }
             },
             "example": {
-                "roleId": 1,
                 "adminKey": "ADMIN_KEY"
             },
             "required": [
-                "roleId, adminKey"
+                "adminKey"
             ]
         }
+
     }
 }
     

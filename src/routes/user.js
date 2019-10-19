@@ -10,13 +10,14 @@ const {
   profileCheck, onDeleteAccount, verifyRoles, onAssign
 } = UserMiddleware;
 const {
-  updateProfile, getProfile, deleteAccount, assignRole
+  updateProfile, getProfile, deleteAccount, assignSuperAdmin, assignRoles
 } = UserController;
-const { all } = PermissionsData;
+const { all, superAdmin } = PermissionsData;
 
 router.put('/profile/:userId', authenticate, profileCheck, updateProfile);
 router.get('/profile/:userId', authenticate, profileCheck, getProfile);
 router.delete('/:userId', authenticate, onDeleteAccount, deleteAccount);
-router.patch('/role', authenticate, onAssign, verifyRoles(all), assignRole);
+router.patch('/assign-super', authenticate, onAssign, verifyRoles(all), assignSuperAdmin);
+router.patch('/assign-role', authenticate, onAssign, verifyRoles(superAdmin), assignRoles);
 
 export default router;

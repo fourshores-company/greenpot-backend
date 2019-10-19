@@ -1,5 +1,6 @@
 export default {
-  admin: [1],
-  user: [2],
-  all: [1, 2],
+  superAdmin: [1],
+  admin: [2],
+  user: [3],
+  all: [1, 2, 3],
 };
