@@ -127,11 +127,9 @@ export default class AuthMiddleware {
    * @returns {object} - returns error or response object
    * @memberof AuthMiddleware
    */
-  static async checkUserValidation(req, res, next) {
+  static async isVerified(req, res, next) {
     try {
-      const token = checkToken(req);
-      if (!token) return errorResponse(res, { code: 401, message: 'Access denied, Token required' });
-      const { tokenData: email } = verifyToken(token);
+      const { email } = req.tokenData;
       const member = await findUser({ email });
       if (member) {
         if (member.isVerified) {

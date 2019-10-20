@@ -27,7 +27,7 @@ export default class Mailer {
    */
   static async sendVerificationEmail(req, user) {
     const { id, email, firstName } = user;
-    const verificationLink = createVerificationLink(req, { id, email });
+    const verificationLink = createVerificationLink(req, { id, email, firstName });
     const mail = {
       to: email,
       from: ADMIN_EMAIL,
