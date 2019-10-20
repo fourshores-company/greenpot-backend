@@ -1,12 +1,12 @@
 import { UserService, RoleService } from '../services';
-import { Toolbox } from '../utils';
+import { Toolbox, Mailer } from '../utils';
 import env from '../config/env';
 
 const {
   ADMIN_KEY
 } = env;
 const {
-  successResponse, errorResponse
+  successResponse, errorResponse,
 } = Toolbox;
 
 const {
@@ -15,6 +15,8 @@ const {
 const {
   updateRole
 } = RoleService;
+
+const { sendVerificationEmail } = Mailer;
 /**
  * Collection of classes cor controlling user profiles
  * @class UserController
@@ -112,6 +114,32 @@ export default class UserController {
       return successResponse(res, { message: 'Role update successful', updatedRole });
     } catch (error) {
       errorResponse(res, {});
+    }
+  }
+
+  /**
+   * updates a user's email
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON} - A jsom response with a success message
+   * @memberof UserController
+   */
+  static async updateEmail(req, res) {
+    const newEmail = req.body.email;
+    const oldEmail = req.tokenData.email;
+    const { id, firstName } = req.tokenData;
+    try {
+      await updateBykey({ email: newEmail }, { id });
+      const emailSent = await sendVerificationEmail(req, { id, newEmail, firstName });
+      if (!emailSent) {
+        // Rollback email to the old one and the status to verified
+        await updateBykey({ email: oldEmail, isVerified: true }, { id });
+        return errorResponse(res, { message: 'Issue updating email, try again' });
+      }
+      res.clearCookie('token', { maxAge: 70000000, httpOnly: true });
+      return successResponse(res, { message: 'Update successful, please use the link sent to your email to verify your profile' });
+    } catch (error) {
+      errorResponse(res, { message: error });
     }
   }
 }

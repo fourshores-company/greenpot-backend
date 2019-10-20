@@ -32,7 +32,13 @@ export default class AuthController {
       const { body } = req;
       const user = await addUser({ ...body });
       const assignedRole = await assignRole(user.id, 2);
-      user.token = createToken({ email: user.email, id: user.id, roleId: 2 });
+      user.token = createToken({
+        email: user.email,
+        id: user.id,
+        roleId: 2,
+        firstName: user.firstName
+      });
+      console.log(user.token);
       const emailSent = await sendVerificationEmail(req, user);
       res.cookie('token', user.token, { maxAge: 70000000, httpOnly: true });
       return successResponse(res, { user, assignedRole, emailSent }, 201);
@@ -56,7 +62,12 @@ export default class AuthController {
       if (!comparePassword(password, user.password)) {
         return errorResponse(res, { code: 401, message: 'This password is incorrect' });
       }
-      user.token = createToken({ email, id: user.id, roleId });
+      user.token = createToken({
+        email,
+        id: user.id,
+        roleId,
+        firstName: user.firstName,
+      });
       res.cookie('token', user.token, { maxAge: 70000000, httpOnly: true });
       return successResponse(res, { message: 'Login Successful' });
     } catch (error) {

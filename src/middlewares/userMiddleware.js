@@ -7,10 +7,10 @@ const {
   errorResponse, validate
 } = Toolbox;
 const {
-  validateProfile, validateUserId
+  validateProfile, validateUserId, validateUserEmail
 } = ProfileValidation;
 const {
-  findUser
+  findUser, updateBykey,
 } = UserService;
 const {
   findRoleUser
@@ -107,6 +107,29 @@ export default class UserMiddleware {
       next();
     } catch (error) {
       errorResponse(res, {});
+    }
+  }
+
+  /**
+   * validate email and change the user's verified status
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - return and object {error or response}
+   */
+  static async onEmailUpdate(req, res, next) {
+    const newEmail = req.body.email;
+    const oldEmail = req.tokenData.email;
+    const { id } = req.tokenData;
+    try {
+      validateUserEmail(newEmail);
+      const userExists = await findUser({ email: newEmail });
+      if (newEmail === oldEmail) return errorResponse(res, { code: 401, message: 'the old and new emails are the same' });
+      if (userExists) return errorResponse(res, { code: 401, message: 'user already exists' });
+      await updateBykey({ isVerified: false }, { id });
+      next();
+    } catch (error) {
+      errorResponse(res, { message: error });
     }
   }
 }

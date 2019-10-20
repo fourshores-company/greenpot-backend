@@ -1,6 +1,9 @@
 import joi from '@hapi/joi';
 import { validationData } from '../utils';
 
+const email = joi.string().email().required()
+  .label('Please enter a valid email address');
+
 /**
  * validation class for user profile
  * @class ProfileValidation
@@ -45,6 +48,20 @@ export default class ProfileValidation {
       id: joi.number().integer().min(1),
     };
     const { error } = joi.validate({ id }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
+
+  /**
+   * email validation
+   * @param {string} payload - user email
+   * @returns {object | boolean} - returns an error object or valid boolean
+   */
+  static validateUserEmail(payload) {
+    const schema = {
+      email,
+    };
+    const { error } = joi.validate({ email: payload }, schema);
     if (error) throw error.details[0].context.label;
     return true;
   }
