@@ -1,9 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { UserService, RoleService } from '../services';
+import { UserService, RoleService, IngredientService } from '../services';
 import { Toolbox } from '../utils';
 
-const { addUser } = UserService;
+const { addUser, updateBykey, deleteBykey } = UserService;
 const { assignRole } = RoleService;
+const { addIngredient } = IngredientService;
 const { createToken } = Toolbox;
 
 export const newUser = {
@@ -65,10 +66,49 @@ export const thirdUser = {
   phoneNumber: '+2349055679332'
 };
 
+export const userA = {
+  firstName: 'joh',
+  lastName: 'chang',
+  email: 'userA@gmail.com',
+  password: 'biyyP4U.ee',
+  gender: 'male',
+  birthDate: '1994-04-16',
+  addressLine1: 'No 34, cintro street',
+  addressLine2: 'Northpoint drive Allen',
+  city: 'Gidi',
+  state: 'Lagos',
+  country: 'Nigeria',
+  phoneNumber: '+2349055679332'
+};
+
+export const userB = {
+  firstName: 'joh',
+  lastName: 'chang',
+  email: 'userB@gmail.com',
+  password: 'biyyP4U.ee',
+  gender: 'male',
+  birthDate: '1994-04-16',
+  addressLine1: 'No 34, cintro street',
+  addressLine2: 'Northpoint drive Allen',
+  city: 'Gidi',
+  state: 'Lagos',
+  country: 'Nigeria',
+  phoneNumber: '+2349055679332'
+};
+
 
 export const userInDatabase = async (body, roleId = 2) => {
   const user = await addUser({ ...body });
+  await updateBykey({ isVerified: true }, { id: user.id });
   await assignRole(user.id, roleId);
   user.token = createToken({ email: user.email, id: user.id, roleId });
   return user;
+};
+
+export const addIngredientToDb = async (ingredient) => {
+  await addIngredient(ingredient);
+};
+
+export const removeUserFromDb = async (id) => {
+  await deleteBykey(id);
 };
