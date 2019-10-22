@@ -58,3 +58,64 @@ describe('Admin can add ingredients', () => {
     expect(response.body.status).to.equal('fail');
   });
 });
+
+describe('Admin can get / edit / delete ingredient', () => {
+  let normalUser;
+  let adminUser;
+  before(async () => {
+    normalUser = await userInDatabase(userA, 3);
+    adminUser = await userInDatabase(userB, 2);
+    await addIngredientToDb({ name: 'fish', unit: '3 grams' });
+  });
+  after(async () => {
+    await removeUserFromDb({ id: normalUser.id });
+    await removeUserFromDb({ id: adminUser.id });
+  });
+  it('should successfully edit an ingredient', async () => {
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/ingredient/edit')
+      .set('Cookie', `token=${adminUser.token};`)
+      .send({ name: 'tomato', unit: '50 gram' });
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+    expect(response.body.data.message).to.be.a('string');
+  });
+  it('should successfully delete an ingredient', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/ingredient')
+      .set('Cookie', `token=${adminUser.token};`)
+      .send({ name: 'tomato' });
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data.message).to.be.a('string');
+  });
+  it('should throw an error when editing an ingredient that doesn\'t exist', async () => {
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/ingredient/edit')
+      .set('Cookie', `token=${adminUser.token};`)
+      .send({ name: 'fufu', unit: '9 grams' });
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+  });
+  it('should return a validation error if the inputs are entered in the wrong format', async () => {
+    const response = await chai
+      .request(server)
+      .patch('/v1.0/api/ingredient/edit')
+      .set('Cookie', `token=${adminUser.token};`)
+      .send({ name: 'fufu', unit: 9 });
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+  });
+  it('should get all ingredients', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/ingredient/all')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+  });
+});

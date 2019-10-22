@@ -28,7 +28,7 @@ export default class IngredientService {
    * @param {object} keys - object containing query key and value
    * e.g { id: 5 }
    * @returns {promise-Object} - A promise object with ingredient details
-   * @memberof UserService
+   * @memberof IngredientService
    */
   static async findIngredient(keys) {
     return Ingredient.findOne({ where: keys });
@@ -39,7 +39,7 @@ export default class IngredientService {
    * @param {object} updateData - data to update
    * @param {object} keys - query key to update
    * @returns {promise-object | error} A promise object with ingredient detail
-   * @memberof UserService
+   * @memberof IngredientService
    */
   static async updateBykey(updateData, keys) {
     const [rowaffected, [ingredient]] = await Ingredient.update(
@@ -53,11 +53,24 @@ export default class IngredientService {
    * delete ingredient key given an option
    * @param {object} keys - query key to delete
    * @returns {promise-object | error} A number showing how many rows were deleted
-   * @memberof UserService
+   * @memberof IngredientService
    */
   static async deleteBykey(keys) {
     const numberOfRowsDeleted = await Ingredient.destroy({ where: keys });
     if (!numberOfRowsDeleted) throw new ApiError(404, 'Not Found');
     return true;
+  }
+
+  /**
+   * get all ingredients
+   * @returns {promise-object} - all ingredients
+   * @memberof IngredientService
+   */
+  static async getAllIngredients() {
+    const ingredients = await Ingredient.findAll({
+      attributes: ['name', 'unit'], where: {}
+    }).map((values) => values.get({ plain: true }));
+
+    return ingredients;
   }
 }
