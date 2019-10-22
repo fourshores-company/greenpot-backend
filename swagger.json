@@ -387,7 +387,7 @@
                 }
             }
         },
-        "/ingredient/edit": {
+        "/ingredient/{Id}": {
             "patch": {
                 "description": "edit ingredient",
                 "summary": "An admin can edit an ingredient",
@@ -403,6 +403,12 @@
                     }
                 ],
                 "parameters": [
+                    {
+                        "in": "path",
+                        "name": "Id",
+                        "required": true,
+                        "description": "The Id of the ingredient to be updated"
+                    },
                     {
                         "in": "body",
                         "name": "body",
@@ -461,7 +467,7 @@
                 }
             }
         },
-        "/ingredient/": {
+        "/ingredient/{id}/": {
             "delete": {
                 "description": "Delete an ingredient",
                 "summary": "An admin can delete an ingredient in the database",
@@ -478,13 +484,10 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
+                        "in": "path",
+                        "name": "Id",
                         "required": true,
-                        "description": "This is the request body object containing ingredient values",
-                        "schema": {
-                            "$ref": "#/requestBody/delete-ingredient"
-                        }
+                        "description": "The Id of the ingredient to be updated"
                     }
                 ],
                 "responses": {
@@ -695,22 +698,6 @@
             "example": {
                 "name": "fish",
                 "unit": "50 grams"
-            },
-            "required": [
-                "name"
-            ]
-        },
-        "delete-ingredient": {
-            "title": "Delete an ingredient in database",
-            "type": "object",
-            "properties":{
-                "name": {
-                    "description": "ingredient name",
-                    "type": "string"
-                }
-            },
-            "example": {
-                "name": "fish"
             },
             "required": [
                 "name"

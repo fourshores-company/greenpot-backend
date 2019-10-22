@@ -40,8 +40,9 @@ export default class IngredientController {
    */
   static async updateIngredient(req, res) {
     try {
-      const { name } = req.body;
-      const ingredient = await updateBykey(req.body, { name });
+      const id = Number(req.params.id);
+      if (!req.body) return errorResponse(res, { code: 400, message: 'no values found in request body' });
+      const ingredient = await updateBykey(req.body, { id });
       successResponse(res, { message: 'Ingredient update was successful', ingredient });
     } catch (error) {
       errorResponse(res, {});
@@ -57,8 +58,8 @@ export default class IngredientController {
    */
   static async deleteIngredient(req, res) {
     try {
-      const { name } = req.body;
-      await deleteBykey(req.body, { name });
+      const id = Number(req.params.id);
+      await deleteBykey({ id });
       successResponse(res, { message: 'Ingredient deleted succesfully' });
     } catch (error) {
       errorResponse(res, {});

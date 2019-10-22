@@ -40,9 +40,9 @@ export default class IngredientMiddleware {
    */
   static async ingredientCheck(req, res, next) {
     try {
-      const { name } = req.body;
-      validateIngredient(req.body);
-      const ingredient = await findIngredient({ name });
+      const id = Number(req.params.id);
+      if (req.body) validateIngredient(req.body);
+      const ingredient = await findIngredient({ id });
       if (!ingredient) return errorResponse(res, { code: 404, message: 'ingredient does not exist in our database' });
       next();
     } catch (error) {
