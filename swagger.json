@@ -344,6 +344,167 @@
                     }
                 }
             }
+        },
+        "/ingredient": {
+            "post": {
+                "description": "Add ingredient",
+                "summary": "An admin can add a new ingredient to the database",
+                "tags": [
+                    "Ingredient"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing ingredient values",
+                        "schema": {
+                            "$ref": "#/requestBody/add-ingredient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/ingredient/{Id}": {
+            "patch": {
+                "description": "edit ingredient",
+                "summary": "An admin can edit an ingredient",
+                "tags": [
+                    "Ingredient"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "Id",
+                        "required": true,
+                        "description": "The Id of the ingredient to be updated"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing ingredient values",
+                        "schema": {
+                            "$ref": "#/requestBody/add-ingredient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/ingredient/all": {
+            "get": {
+                "description": "Get ingredient",
+                "summary": "An admin can get all ingredients in the database",
+                "tags": [
+                    "Ingredient"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/ingredient/{id}/": {
+            "delete": {
+                "description": "Delete an ingredient",
+                "summary": "An admin can delete an ingredient in the database",
+                "tags": [
+                    "Ingredient"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "Id",
+                        "required": true,
+                        "description": "The Id of the ingredient to be updated"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {
@@ -520,8 +681,28 @@
             "required": [
                 "adminKey"
             ]
+        },
+        "add-ingredient": {
+            "title": "add / edit an ingredient to/in database",
+            "type": "object",
+            "properties":{
+                "name": {
+                    "description": "ingredient name",
+                    "type": "string"
+                },
+                "unit": {
+                    "description": "ingredient unit (litre/gram)",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "name": "fish",
+                "unit": "50 grams"
+            },
+            "required": [
+                "name"
+            ]
         }
-
     }
 }
     

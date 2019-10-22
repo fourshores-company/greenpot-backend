@@ -106,7 +106,12 @@ export const userInDatabase = async (body, roleId = 2) => {
 };
 
 export const addIngredientToDb = async (ingredient) => {
-  await addIngredient(ingredient);
+  const value = await addIngredient(ingredient);
+  return value;
+};
+
+export const removeIngredientInDb = async (id) => {
+  await IngredientService.deleteBykey(id);
 };
 
 export const removeUserFromDb = async (id) => {
