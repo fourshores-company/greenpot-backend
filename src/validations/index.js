@@ -2,6 +2,7 @@ import AuthValidation from './authValidation';
 import PasswordValidation from './passwordValidation';
 import ProfileValidation from './profileValidation';
 import IngredientValidations from './ingredientValidation';
+import MealValidation from './mealValidation';
 
 
 export {
@@ -9,4 +10,5 @@ export {
   PasswordValidation,
   ProfileValidation,
   IngredientValidations,
+  MealValidation,
 };
