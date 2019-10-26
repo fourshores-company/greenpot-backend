@@ -30,7 +30,7 @@ export default class MealMiddleware {
       errorResponse(res, { code: 400, message: error });
     }
   }
-  
+
   /**
    * validate ingredient being added to meal
    * @param {object} req

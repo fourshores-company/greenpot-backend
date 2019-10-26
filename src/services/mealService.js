@@ -96,7 +96,6 @@ export default class MealService {
    */
   static async addIngredientToMeal(payload) {
     try {
-      console.log('meal payload here: ', payload);
       const { dataValues: value } = await MealIngredient.create(payload);
       return value;
     } catch (error) {

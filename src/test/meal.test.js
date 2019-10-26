@@ -2,7 +2,7 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import server from '..';
 import {
-  userA, userB, userInDatabase, addIngredientToDb, addMealToDb, removeUserFromDb,
+  userA, userB, userInDatabase, addIngredientToDb, addMealToDb, removeUserFromDb
 } from './dummyData';
 
 chai.use(chaiHttp);

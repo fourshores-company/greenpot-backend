@@ -127,4 +127,4 @@ export const addMealToDb = async (meal) => {
 export const addIngredientToMealInDb = async (payload) => {
   const value = await addIngredientToMeal(payload);
   return value;
-}
+};
