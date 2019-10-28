@@ -505,6 +505,122 @@
                     }
                 }
             }
+        },
+        "/meal/": {
+            "post": {
+                "description": "Add meal",
+                "summary": "An admin can add a new meal to the database",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing meal values",
+                        "schema": {
+                            "$ref": "#/requestBody/add-meal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/meal/add-ingredient": {
+            "post": {
+                "description": "Add ingredient to a meal",
+                "summary": "An admin can add a new ingredient to a meal to the database",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing payloadvalues",
+                        "schema": {
+                            "$ref": "#/requestBody/meal-ingredient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/meal": {
+            "get": {
+                "description": "Get meals",
+                "summary": "An admin can get all meals in the database",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {
@@ -701,6 +817,70 @@
             },
             "required": [
                 "name"
+            ]
+        },
+        "add-meal": {
+            "title": "add meal to database",
+            "type": "object",
+            "properties":{
+                "name": {
+                    "description": "meal name",
+                    "type": "string"
+                },
+                "recipe": {
+                    "description": "url of recipe document",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "meal price",
+                    "type": "string"
+                },
+                "prepTime": {
+                    "description": "meal prep time",
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "description": "url of meal image",
+                    "type": "string"
+                }
+
+            },
+            "example": {
+                "name": "Egusi Soup",
+                "recipe": "https://recipes.com/egusi",
+                "price": 5000.00,
+                "prepTime": "2 hours",
+                "imageUrl": "https://images.com/egusi"
+            },
+            "required": [
+                "name", "recipe", "price", "prepTime"
+            ]
+        },
+        "meal-ingredient": {
+            "title": "add ingredient to meal in database",
+            "type": "object",
+            "properties":{
+                "mealId": {
+                    "description": "meal id",
+                    "type": "integer"
+                },
+                "ingredientid": {
+                    "description": "ingredient id",
+                    "type": "integer"
+                },
+                "ingredientQuantity": {
+                    "description": "quantity of ingredient",
+                    "type": "integer"
+                }
+
+            },
+            "example": {
+                "mealId": 1,
+                "ingredientId": 1,
+                "ingredientQuantity": 5
+            },
+            "required": [
+                "mealId", "ingredientId", "ingredientQuantity"
             ]
         }
     }
