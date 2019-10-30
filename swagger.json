@@ -568,7 +568,7 @@
                         "in": "body",
                         "name": "body",
                         "required": true,
-                        "description": "This is the request body object containing payloadvalues",
+                        "description": "This is the request body object containing payload values",
                         "schema": {
                             "$ref": "#/requestBody/meal-ingredient"
                         }
@@ -606,6 +606,90 @@
                     }
                 ],
                 "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/meal/category": {
+            "post": {
+                "description": "Add a meal category",
+                "summary": "An admin can add a new meal category to the database",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing category",
+                        "schema": {
+                            "$ref": "#/requestBody/add-category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "meal/category/add-meal": {
+            "post": {
+                "description": "Add a meal to a meal category",
+                "summary": "An admin can add a new meal to a meal category to the database",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing payload values",
+                        "schema": {
+                            "$ref": "#/requestBody/meal-category"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -881,6 +965,48 @@
             },
             "required": [
                 "mealId", "ingredientId", "ingredientQuantity"
+            ]
+        },
+        "add-category": {
+            "title": "add meal category in database",
+            "type": "object",
+            "properties": {
+                "category": {
+                    "description": "category name",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "category description",
+                    "type": "string"
+                }
+            },
+            "example": {
+                "category": "Keto Diet",
+                "description": "A meal for those on keto diet"
+            },
+            "required": [
+                "category", "description"
+            ]
+        },
+        "meal-category": {
+            "title": "add meal to a meal category in database",
+            "type": "object",
+            "properties": {
+                "mealId": {
+                    "description": "meal id",
+                    "type": "integer"
+                },
+                "categoryId": {
+                    "description": "category id",
+                    "type": "integer"
+                }
+            },
+            "example": {
+                "mealId": 5,
+                "categoryId": 1
+            },
+            "required": [
+                "mealId", "categoryId"
             ]
         }
     }
