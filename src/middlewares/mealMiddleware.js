@@ -7,7 +7,7 @@ const {
 } = MealValidation;
 const { findMeal } = MealService;
 const { findIngredient } = IngredientService;
-const { findCategory } = CategoryService;
+const { findCategory, findMealByCategory } = CategoryService;
 const { errorResponse } = Toolbox;
 /**
  * Middleware for meal routes
@@ -92,6 +92,8 @@ export default class MealMiddleware {
       if (!mealExists) return errorResponse(res, { code: 404, message: 'meal does not exist in our database' });
       const category = await findCategory({ id: categoryId });
       if (!category) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
+      const mealInCategory = await findMealByCategory(categoryId, mealId);
+      if (mealInCategory) return errorResponse(res, { code: 400, message: 'This meal is already in this category' });
       next();
     } catch (error) {
       errorResponse(res, { code: 400, message: error });

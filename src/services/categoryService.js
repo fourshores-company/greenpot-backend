@@ -79,4 +79,15 @@ export default class CategoryService {
       throw new Error(error);
     }
   }
+
+  /**
+   * find meal by meal category
+   * @param {object} categoryId
+   * @param {object} mealId
+   * @returns {promise-object} - meal in category
+   * @memberof CategoryService
+   */
+  static async findMealByCategory(categoryId, mealId) {
+    return MealCategory.findOne({ where: mealId, categoryId });
+  }
 }

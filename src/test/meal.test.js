@@ -32,6 +32,7 @@ describe('Admin can add meals and add ingredients to meals', () => {
   after(async () => {
     await removeUserFromDb({ id: normalUser.id });
     await removeUserFromDb({ id: adminUser.id });
+    // await removeMealCategroyFromDb({ categoryId: category.id });
   });
   it('should successfully add a meal', async () => {
     const response = await chai
@@ -202,6 +203,19 @@ describe('Admin can add meals and add ingredients to meals', () => {
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
     expect(response.body.data.message).to.be.a('string');
+  });
+  it('should return an error if input meal has been added to input category', async () => {
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/meal/category/add-meal')
+      .set('Cookie', `token=${adminUser.token};`)
+      .send({
+        mealId: meal.id,
+        categoryId: category.id,
+      });
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('This meal is already in this category');
   });
   it('should return an error if a category does not exist', async () => {
     const response = await chai
