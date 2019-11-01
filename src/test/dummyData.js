@@ -1,11 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { UserService, RoleService, IngredientService, MealService } from '../services';
+import {
+  UserService, RoleService, IngredientService, MealService,
+  CategoryService
+} from '../services';
 import { Toolbox } from '../utils';
 
 const { addUser, updateBykey, deleteBykey } = UserService;
 const { assignRole } = RoleService;
 const { addIngredient } = IngredientService;
 const { addMeal, addIngredientToMeal } = MealService;
+const { addCategory } = CategoryService;
 const { createToken } = Toolbox;
 
 export const newUser = {
@@ -126,5 +130,10 @@ export const addMealToDb = async (meal) => {
 
 export const addIngredientToMealInDb = async (payload) => {
   const value = await addIngredientToMeal(payload);
+  return value;
+};
+
+export const addCategoryToDb = async (category) => {
+  const value = await addCategory(category);
   return value;
 };
