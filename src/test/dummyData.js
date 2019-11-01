@@ -137,3 +137,7 @@ export const addCategoryToDb = async (category) => {
   const value = await addCategory(category);
   return value;
 };
+
+export const removeMealFromDb = async (payLoad) => {
+  await MealService.deleteMealBykey(payLoad);
+};
