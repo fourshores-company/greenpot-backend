@@ -7,7 +7,7 @@ const {
 } = Toolbox;
 
 const {
-  addMeal, getAllMeals, addIngredientToMeal,
+  addMeal, getAllMeals, addIngredientToMeal, deleteIngredientFromMeal
 } = MealService;
 const { addCategory, addMealToCategory } = CategoryService;
 
@@ -92,6 +92,23 @@ export default class MealController {
     try {
       const mealCategory = await addMealToCategory(req.body);
       successResponse(res, { message: 'Meal added to category successfully', mealCategory });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * deelete an ingredient from a meal
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response.
+   * @memberof MealController
+   */
+  static async deleteIngredient(req, res) {
+    const { mealId, ingredientId } = req.params;
+    try {
+      await deleteIngredientFromMeal({ mealId, ingredientId });
+      successResponse(res, { message: 'Ingredient deleted successfully' });
     } catch (error) {
       errorResponse(res, {});
     }

@@ -27,6 +27,10 @@
         {
             "name": "Auth",
             "description": "Endpoint for Authentication"
+        },
+        {
+            "name": "Meal",
+            "description": "Endpoint for Meals"
         }
     ],
     "paths": {
@@ -699,6 +703,48 @@
                     },
                     "404": {
                         "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/meal/{mealId}/ingredient/{ingredientId}": {
+            "delete": {
+                "description": "Deletes an ingredient from a meal",
+                "summary": "An admin can remove an ingredient from a meal",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "mealId",
+                        "required": true,
+                        "description": "The Id of the meal from which you want to remove an ingredient"
+                    },
+                    {
+                        "in": "path",
+                        "name": "ingredientId",
+                        "required": true,
+                        "description": "The id of the ingredient to be removed from the meal"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
                     },
                     "401": {
                         "description": "Authorization required"

@@ -102,4 +102,30 @@ export default class MealService {
       throw new Error(error);
     }
   }
+
+  /**
+   * remove ingredient from meal
+   * @param {object} payLoad - { mealId, ingredientId}
+   * @returns {boolean | error} - true if successfull or an error if it fails
+   * @memberof MealService
+   */
+  static async deleteIngredientFromMeal(payLoad) {
+    try {
+      const numberOfRowsDeleted = await MealIngredient.destroy({ where: payLoad });
+      if (!numberOfRowsDeleted) throw new ApiError(404, 'Not Found');
+      return true;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * find ingredient in meal
+   * @param {object} payLoad - { mealId, ingredientId}
+   * @returns {Promise} - promise
+   * @memberof MealService
+   */
+  static async findIngredientInMeal(payLoad) {
+    return MealIngredient.findOne({ where: payLoad });
+  }
 }
