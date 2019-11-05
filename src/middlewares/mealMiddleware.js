@@ -86,15 +86,27 @@ export default class MealMiddleware {
    */
   static async mealCategoryCheck(req, res, next) {
     try {
-      const { mealId, categoryId } = req.body;
-      validateCategoryParameters(req.body);
-      const mealExists = await findMeal({ id: mealId });
-      if (!mealExists) return errorResponse(res, { code: 404, message: 'meal does not exist in our database' });
-      const category = await findCategory({ id: categoryId });
-      if (!category) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
-      const mealInCategory = await findMealByCategory(categoryId, mealId);
-      if (mealInCategory) return errorResponse(res, { code: 400, message: 'This meal is already in this category' });
-      next();
+      if (req.body.categoryId) {
+        const { mealId, categoryId } = req.body;
+        validateCategoryParameters(req.body);
+        const mealExists = await findMeal({ id: mealId });
+        if (!mealExists) return errorResponse(res, { code: 404, message: 'meal does not exist in our database' });
+        const category = await findCategory({ id: categoryId });
+        if (!category) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
+        const mealInCategory = await findMealByCategory({ mealId, categoryId });
+        if (mealInCategory) return errorResponse(res, { code: 400, message: 'This meal is already in this category' });
+        next();
+      } else if (req.params.categoryId) {
+        const { categoryId, mealId } = req.params;
+        validateCategoryParameters(req.params);
+        const mealExists = await findMeal({ id: mealId });
+        if (!mealExists) return errorResponse(res, { code: 404, message: 'meal does not exist in our database' });
+        const category = await findCategory({ id: categoryId });
+        if (!category) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
+        const mealInCategory = await findMealByCategory({ mealId, categoryId });
+        if (!mealInCategory) return errorResponse(res, { code: 400, message: 'This meal does not exist in this category' });
+        next();
+      }
     } catch (error) {
       errorResponse(res, { code: 400, message: error });
     }

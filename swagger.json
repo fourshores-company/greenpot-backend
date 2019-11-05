@@ -751,6 +751,48 @@
                     }
                 }
             }
+        },
+        "/meal/category/{categoryId}/meal/{mealId}": {
+            "delete": {
+                "description": "Deletes a meal from a meal category",
+                "summary": "An admin can remove a meal from a meal category",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "categoryId",
+                        "required": true,
+                        "description": "The Id of the meal category Id"
+                    },
+                    {
+                        "in": "path",
+                        "name": "mealId",
+                        "required": true,
+                        "description": "The id of the meal to be removed from the meal category"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {

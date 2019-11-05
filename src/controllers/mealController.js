@@ -9,7 +9,7 @@ const {
 const {
   addMeal, getAllMeals, addIngredientToMeal, deleteIngredientFromMeal
 } = MealService;
-const { addCategory, addMealToCategory } = CategoryService;
+const { addCategory, addMealToCategory, deleteMealFromCategory } = CategoryService;
 
 /**
  * Meal Controller
@@ -43,6 +43,23 @@ export default class MealController {
     try {
       const ingredient = await addIngredientToMeal(req.body);
       successResponse(res, { message: 'Ingredient added to meal successfully', ingredient });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * deelete an ingredient from a meal
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response.
+   * @memberof MealController
+   */
+  static async deleteIngredient(req, res) {
+    const { mealId, ingredientId } = req.params;
+    try {
+      await deleteIngredientFromMeal({ mealId, ingredientId });
+      successResponse(res, { message: 'Ingredient deleted successfully' });
     } catch (error) {
       errorResponse(res, {});
     }
@@ -98,17 +115,17 @@ export default class MealController {
   }
 
   /**
-   * deelete an ingredient from a meal
+   * delete meal from category
    * @param {object} req
    * @param {object} res
    * @returns {JSON } A JSON response.
    * @memberof MealController
    */
-  static async deleteIngredient(req, res) {
-    const { mealId, ingredientId } = req.params;
+  static async deleteMealFromCategory(req, res) {
+    const { mealId, categoryId } = req.params;
     try {
-      await deleteIngredientFromMeal({ mealId, ingredientId });
-      successResponse(res, { message: 'Ingredient deleted successfully' });
+      await deleteMealFromCategory({ mealId, categoryId });
+      successResponse(res, { message: 'meal deleted successfully' });
     } catch (error) {
       errorResponse(res, {});
     }
