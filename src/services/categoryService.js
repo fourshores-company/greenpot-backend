@@ -82,12 +82,27 @@ export default class CategoryService {
 
   /**
    * find meal by meal category
-   * @param {object} categoryId
-   * @param {object} mealId
+   * @param {object} payload { mealId, categoryId }
    * @returns {promise-object} - meal in category
    * @memberof CategoryService
    */
-  static async findMealByCategory(categoryId, mealId) {
-    return MealCategory.findOne({ where: mealId, categoryId });
+  static async findMealByCategory(payload) {
+    return MealCategory.findOne({ where: payload });
+  }
+
+  /**
+   * delete meal from category
+   * @param {object} payload {mealId, categoryId}
+   * @returns {boolean | error} - true if successfull or an error if it fails
+   * @memberof CategoryService
+   */
+  static async deleteMealFromCategory(payload) {
+    try {
+      const numberOfRowsDeleted = await MealCategory.destroy({ where: payload });
+      if (!numberOfRowsDeleted) throw new ApiError(404, 'Not Found');
+      return true;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

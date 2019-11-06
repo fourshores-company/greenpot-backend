@@ -8,7 +8,7 @@ import {
 } from './dummyData';
 
 chai.use(chaiHttp);
-describe('Admin can add meals and add ingredients to meals', () => {
+describe('Admin meal tests', () => {
   let normalUser;
   let adminUser;
   let meal;
@@ -33,7 +33,6 @@ describe('Admin can add meals and add ingredients to meals', () => {
   after(async () => {
     await removeUserFromDb({ id: normalUser.id });
     await removeUserFromDb({ id: adminUser.id });
-    // await removeMealCategroyFromDb({ categoryId: category.id });
   });
   it('should successfully add a meal', async () => {
     const response = await chai
@@ -243,6 +242,43 @@ describe('Admin can add meals and add ingredients to meals', () => {
     expect(response).to.have.status(404);
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal('meal does not exist in our database');
+  });
+  it('should return an error if an unauthorized user tries to delete a meal from a category', async () => {
+    const response = await chai
+      .request(server)
+      .delete(`/v1.0/api/meal/category/${category.id}/meal/${meal.id}`)
+      .set('Cookie', `token=${normalUser.token};`);
+    expect(response).to.have.status(403);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
+  });
+  it('should return an error if the meal id or category id does not exist', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/meal/category/400/meal/5')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('meal does not exist in our database');
+  });
+  it('should return an error if format of the meal or category id is wrong', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/meal/category/efver/meal/dfd')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Please enter a positive number');
+  });
+  it('should remove a meal from a meal category successfully', async () => {
+    const response = await chai
+      .request(server)
+      .delete(`/v1.0/api/meal/category/${category.id}/meal/${meal.id}`)
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+    expect(response.body.data.message).to.equal('meal deleted successfully');
   });
 });
 
