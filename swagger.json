@@ -794,6 +794,42 @@
                 }
             }
         },
+        "/meal/{mealId}": {
+            "delete": {
+                "description": "Deletes a meal",
+                "summary": "An admin can remove a meal",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                         "name": "mealId",
+                        "required": true,
+                        "description": "The Id of the meal from which you want to remove an ingredient"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
         "/meal/category/{id}": {
             "delete": {
                 "description": "Deletes a meal category",
