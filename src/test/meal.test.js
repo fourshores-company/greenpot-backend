@@ -345,3 +345,56 @@ describe('Admin can remove ingredients from a meal', () => {
     expect(response.body.status).to.equal('fail');
   });
 });
+
+describe('Admin can delete meals', () => {
+  let normalUser;
+  let adminUser;
+  let meal;
+  before(async () => {
+    normalUser = await userInDatabase(userA, 3);
+    adminUser = await userInDatabase(userB, 2);
+    meal = await addMealToDb({
+      name: 'Spaghetti',
+      recipe: 'https://recipes.com/jollof',
+      price: '5000.00',
+      prepTime: '45 minutes',
+      imageUrl: 'https://images.com/jollof',
+    });
+  });
+  after(async () => {
+    await removeUserFromDb({ id: normalUser.id });
+    await removeUserFromDb({ id: adminUser.id });
+  });
+  it('should return an error if a non-admin tries to delete a meal', async () => {
+    const response = await chai
+      .request(server)
+      .delete(`/v1.0/api/meal/${meal.id}`)
+      .set('Cookie', `token=${normalUser.token};`);
+    expect(response).to.have.status(403);
+    expect(response.body.status).to.equal('fail');
+  });
+  it('should be successful when an admin deletes a meal', async () => {
+    const response = await chai
+      .request(server)
+      .delete(`/v1.0/api/meal/${meal.id}`)
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+  });
+  it('should fail if an invalid mealId is entered', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/meal/a')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+  });
+  it('should fail if a mealId that does not exist is entered', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/meal/200')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+  });
+});
