@@ -9,10 +9,11 @@ const { authenticate, isVerified } = AuthMiddleware;
 const { verifyRoles } = UserMiddleware;
 const {
   mealCheck, ingredientCheck, onMealCategory, mealCategoryCheck, beforeDeletingIngredient,
+  onDeleteMeal
 } = MealMiddleware;
 const {
   newMeal, addIngredientToMeal, viewMeals, newCategory, addMealToCategory,
-  deleteIngredient, deleteMealFromCategory
+  deleteIngredient, deleteMealFromCategory, deleteMealCategory
 } = MealController;
 const { admin } = PermissionsData;
 router.post('/', authenticate, verifyRoles(admin), isVerified, mealCheck, newMeal);
@@ -22,6 +23,7 @@ router.post('/category/', authenticate, verifyRoles(admin), isVerified, onMealCa
 router.post('/category/add-meal', authenticate, verifyRoles(admin), isVerified, mealCategoryCheck, addMealToCategory);
 router.delete('/:mealId/ingredient/:ingredientId', authenticate, verifyRoles(admin), isVerified, beforeDeletingIngredient, deleteIngredient);
 router.delete('/category/:categoryId/meal/:mealId', authenticate, verifyRoles(admin), isVerified, mealCategoryCheck, deleteMealFromCategory);
+router.delete('/category/:id', authenticate, verifyRoles(admin), isVerified, onDeleteMeal, deleteMealCategory);
 
 
 export default router;

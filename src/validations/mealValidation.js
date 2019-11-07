@@ -101,4 +101,19 @@ export default class MealValidation {
     if (error) throw error.details[0].context.label;
     return true;
   }
+
+  /**
+   * validate category id on delete
+   * @param {object} payload
+   * @returns {object | boolean} - returns an error object or valid boolean
+   * @memberof MealValidation
+   */
+  static validateDeleteCategory(payload) {
+    const schema = {
+      id: number
+    };
+    const { error } = joi.validate({ ...payload }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
 }

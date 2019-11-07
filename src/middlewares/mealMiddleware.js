@@ -3,7 +3,8 @@ import { Toolbox } from '../utils';
 import { MealService, IngredientService, CategoryService } from '../services';
 
 const {
-  validateMeal, validateMealParameters, validateCategory, validateCategoryParameters, validateDeleteIngredientFromMeal
+  validateMeal, validateMealParameters, validateCategory, validateCategoryParameters, validateDeleteIngredientFromMeal,
+  validateDeleteCategory,
 } = MealValidation;
 const { findMeal, findIngredientInMeal } = MealService;
 const { findIngredient } = IngredientService;
@@ -130,6 +131,26 @@ export default class MealMiddleware {
       if (!ingredient) return errorResponse(res, { code: 404, message: 'The ingredient does not exist in our database' });
       const ingredientInMeal = await findIngredientInMeal({ mealId, ingredientId });
       if (!ingredientInMeal) return errorResponse(res, { code: 400, message: 'The ingredient does not exist in the meal' });
+      next();
+    } catch (error) {
+      errorResponse(res, { code: 400, message: error });
+    }
+  }
+
+  /**
+   * check category on delete
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} = object response
+   * @memberof MealMiddleware
+   */
+  static async onDeleteMeal(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      validateDeleteCategory(req.params);
+      const category = await findCategory({ id });
+      if (!category) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
       next();
     } catch (error) {
       errorResponse(res, { code: 400, message: error });

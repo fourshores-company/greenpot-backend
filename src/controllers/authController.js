@@ -38,7 +38,14 @@ export default class AuthController {
         roleId: 3,
         firstName: user.firstName
       });
-      const emailSent = await sendVerificationEmail(req, user);
+      /**
+       * REMEMBER TO UNCOMMENT THE BELOW BEFORE PRODUCTION
+       */
+      // const emailSent = await sendVerificationEmail(req, user);
+      /**
+       * REMEMBER TO DELETE LINE BEFORE PRODUCTION
+       */
+      const emailSent = true;
       res.cookie('token', user.token, { maxAge: 70000000, httpOnly: true });
       return successResponse(res, { user, assignedRole, emailSent }, 201);
     } catch (error) {
@@ -150,7 +157,14 @@ export default class AuthController {
       const { email } = req.body;
       const user = await findUser({ email });
       if (!user) return errorResponse(res, { code: 404, message: 'Sorry, we do not recognise this user in our database' });
-      const emailSent = await sendPasswordResetEmail(req, user);
+      /**
+       * REMEMBER TO UNCOMMENT LINE BELOW BEFORE PRODUCTION
+       */
+      // const emailSent = await sendPasswordResetEmail(req, user);
+      /**
+       * REMEMBER TO DELETE LINE BELOW BEFORE PRODUCTION
+       */
+      const emailSent = true;
       if (emailSent) return successResponse(res, { message: 'A password reset link has been sent to your email' });
     } catch (error) {
       errorResponse(res, {});

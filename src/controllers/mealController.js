@@ -9,7 +9,12 @@ const {
 const {
   addMeal, getAllMeals, addIngredientToMeal, deleteIngredientFromMeal
 } = MealService;
-const { addCategory, addMealToCategory, deleteMealFromCategory } = CategoryService;
+const {
+  addCategory,
+  addMealToCategory,
+  deleteMealFromCategory,
+  deleteCategoryBykey,
+} = CategoryService;
 
 /**
  * Meal Controller
@@ -126,6 +131,23 @@ export default class MealController {
     try {
       await deleteMealFromCategory({ mealId, categoryId });
       successResponse(res, { message: 'meal deleted successfully' });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * delete meal category
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with message
+   * @memberof MealController
+   */
+  static async deleteMealCategory(req, res) {
+    try {
+      const id = Number(req.params.id);
+      await deleteCategoryBykey({ id });
+      successResponse(res, { message: 'category deleted successfully' });
     } catch (error) {
       errorResponse(res, {});
     }
