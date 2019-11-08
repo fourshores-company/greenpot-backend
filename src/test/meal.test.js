@@ -243,6 +243,7 @@ describe('Admin meal tests', () => {
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal('meal does not exist in our database');
   });
+
   it('should return an error if an unauthorized user tries to delete a meal from a category', async () => {
     const response = await chai
       .request(server)
@@ -279,6 +280,44 @@ describe('Admin meal tests', () => {
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
     expect(response.body.data.message).to.equal('meal deleted successfully');
+  });
+
+  it('should return an error when a user tries to delete a category', async () => {
+    const response = await chai
+      .request(server)
+      .delete(`/v1.0/api/meal/category/${category.id}`)
+      .set('Cookie', `token=${normalUser.token};`);
+    expect(response).to.have.status(403);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
+  });
+  it('should return an error if category does not exist while deleting', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/meal/category/400/')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('category does not exist in our database');
+  });
+  it('should return an error if category id format is wrong', async () => {
+    const response = await chai
+      .request(server)
+      .delete('/v1.0/api/meal/category/efver')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Please enter a positive number');
+  });
+  it('should delete a meal category successfully', async () => {
+    const response = await chai
+      .request(server)
+      .delete(`/v1.0/api/meal/category/${category.id}`)
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+    expect(response.body.data.message).to.equal('category deleted successfully');
   });
 });
 

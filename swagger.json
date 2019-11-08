@@ -772,7 +772,7 @@
                         "in": "path",
                         "name": "categoryId",
                         "required": true,
-                        "description": "The Id of the meal category Id"
+                        "description": "The Id of the meal category"
                     },
                     {
                         "in": "path",
@@ -812,9 +812,45 @@
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "mealId",
+                         "name": "mealId",
                         "required": true,
                         "description": "The Id of the meal from which you want to remove an ingredient"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/meal/category/{id}": {
+            "delete": {
+                "description": "Deletes a meal category",
+                "summary": "An admin can remove a meal category",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "The Id of the meal category"
                     }
                 ],
                 "responses": {

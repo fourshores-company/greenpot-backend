@@ -49,5 +49,4 @@ export default class IngredientMiddleware {
       errorResponse(res, { code: 400, message: error });
     }
   }
-
 }
