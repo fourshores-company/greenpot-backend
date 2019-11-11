@@ -15,10 +15,10 @@ const {
   newMeal, addIngredientToMeal, viewMeals, newCategory, addMealToCategory,
   deleteIngredient, deleteMealFromCategory, deleteMealCategory, deleteMeal
 } = MealController;
-const { admin } = PermissionsData;
+const { admin, all } = PermissionsData;
 router.post('/', authenticate, verifyRoles(admin), isVerified, mealCheck, newMeal);
 router.post('/add-ingredient', authenticate, verifyRoles(admin), isVerified, ingredientCheck, addIngredientToMeal);
-router.get('/', authenticate, verifyRoles(admin), isVerified, viewMeals);
+router.get('/', authenticate, verifyRoles(all), isVerified, viewMeals);
 router.post('/category/', authenticate, verifyRoles(admin), isVerified, onMealCategory, newCategory);
 router.post('/category/add-meal', authenticate, verifyRoles(admin), isVerified, mealCategoryCheck, addMealToCategory);
 router.delete('/:mealId/ingredient/:ingredientId', authenticate, verifyRoles(admin), isVerified, beforeDeletingIngredient, deleteIngredient);
