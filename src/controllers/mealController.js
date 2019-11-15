@@ -14,6 +14,7 @@ const {
   addMealToCategory,
   deleteMealFromCategory,
   deleteCategoryBykey,
+  getMealsByCategory,
 } = CategoryService;
 
 /**
@@ -82,6 +83,24 @@ export default class MealController {
       const allMeals = await getAllMeals();
       if (!allMeals.length) return errorResponse(res, { code: 404, message: 'There are no meals' });
       return successResponse(res, { ...allMeals });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * get meal by category
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the meals.
+   * @memberof MealController
+   */
+  static async MealsByCategory(req, res) {
+    try {
+      const { category } = req.query;
+      const meals = await getMealsByCategory(category);
+      if (!meals.length) return errorResponse(res, { code: 404, message: 'This category either doesn\'t exist, or there are no meals in it' });
+      return successResponse(res, { ...meals });
     } catch (error) {
       errorResponse(res, {});
     }

@@ -3,7 +3,7 @@ import db from '../models';
 
 
 const {
-  Category, MealCategory,
+  Category, Meal, MealCategory,
 } = db;
 
 /**
@@ -104,5 +104,28 @@ export default class CategoryService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  /**
+   * @param {string} category - object containing query key and value
+   * e.g { id: 5 }, { category: value }
+   * @returns {promise-object} - meals in category
+   * @memberof CategoryService
+   */
+  static async getMealsByCategory(category) {
+    const value = await Category.findAll({
+      include: [{
+        model: Meal,
+        as: 'meals',
+        required: false,
+        attributes: ['name', 'recipe', 'price', 'prepTime', 'imageUrl'],
+        through: {
+          model: MealCategory
+        }
+      }],
+      where: { category }
+    }).map((values) => values.get({ plain: true }));
+
+    return value;
   }
 }

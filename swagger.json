@@ -597,7 +597,7 @@
         "/meal": {
             "get": {
                 "description": "Get meals",
-                "summary": "An admin can get all meals in the database",
+                "summary": "A user can get all meals in the database",
                 "tags": [
                     "Meal"
                 ],
@@ -610,6 +610,45 @@
                     }
                 ],
                 "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/meal/category?category={category}": {
+            "get": {
+                "description": "Get meals by category",
+                "summary": "A user can get all meals by categoryin the database",
+                "tags": [
+                    "Meal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "category",
+                        "required": true,
+                        "description": "The category name"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success"

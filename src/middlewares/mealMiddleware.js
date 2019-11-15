@@ -5,7 +5,7 @@ import { MealService, IngredientService, CategoryService } from '../services';
 const {
   validateMeal, validateMealParameters, validateCategory,
   validateCategoryParameters, validateDeleteIngredientFromMeal,
-  validateDeleteCategory, validateDeleteMeal,
+  validateDeleteCategory, validateDeleteMeal, validateCategoryQuery
 } = MealValidation;
 const { findMeal, findIngredientInMeal } = MealService;
 const { findIngredient } = IngredientService;
@@ -166,13 +166,21 @@ export default class MealMiddleware {
    * @returns {object} = object response
    * @memberof MealMiddleware
    */
-  static async onDeleteMealCategory(req, res, next) {
+  static async categoryQueryCheck(req, res, next) {
     try {
-      const id = Number(req.params.id);
-      validateDeleteCategory(req.params);
-      const category = await findCategory({ id });
-      if (!category) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
-      next();
+      if (req.params.id) {
+        validateDeleteCategory(req.params);
+        const id = Number(req.params.id);
+        const categoryInDatabase = await findCategory({ id });
+        if (!categoryInDatabase) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
+        next();
+      } else if (req.query.category) {
+        const { category } = req.query;
+        validateCategoryQuery({ category });
+        const categoryInDatabase = await findCategory({ category });
+        if (!categoryInDatabase) return errorResponse(res, { code: 404, message: 'category does not exist in our database' });
+        next();
+      }
     } catch (error) {
       errorResponse(res, { code: 400, message: error });
     }
