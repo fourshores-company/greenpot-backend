@@ -131,4 +131,20 @@ export default class MealValidation {
     if (error) throw error.details[0].context.label;
     return true;
   }
+
+  /**
+   * validate category in query
+   * @param {object} payload
+   * @returns {object | boolean} - returns an error object or valid boolean
+   * @memberof MealValidation
+   */
+  static validateCategoryQuery(payload) {
+    const schema = {
+      category: joi.string().min(3).max(30)
+        .label('Please enter a valid meal category \n the field must not be empty and it must be more than 2 letters'),
+    };
+    const { error } = joi.validate({ ...payload }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
 }

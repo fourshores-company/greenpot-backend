@@ -230,7 +230,7 @@ describe('Admin meal tests', () => {
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal('category does not exist in our database');
   });
-  it('shoulf return an error if meal does not exist', async () => {
+  it('should return an error if meal does not exist', async () => {
     const response = await chai
       .request(server)
       .post('/v1.0/api/meal/category/add-meal')
@@ -244,6 +244,32 @@ describe('Admin meal tests', () => {
     expect(response.body.error.message).to.equal('meal does not exist in our database');
   });
 
+  it('should get all meals in a category', async () => {
+    const response = await chai
+      .request(server)
+      .get(`/v1.0/api/meal/category?category=${category.category}`)
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
+  it('should return an error if format of the category id is wrong when getting meals from category', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/meal/category?category=43')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+  });
+  it('should return an error if category doesn\'t exist when getting meals', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/meal/category?category=thai')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('category does not exist in our database');
+  });
   it('should return an error if an unauthorized user tries to delete a meal from a category', async () => {
     const response = await chai
       .request(server)
