@@ -26,7 +26,6 @@ export default class OrderService {
         userId: payload.userId,
       }, { transaction: t }).then((order) => {
         // add order id to the meals before uploading
-        console.log('transaction 2');
         const updateMealArray = [...payload.meals];
         updateMealArray.forEach((meal) => {
           meal.orderId = order.id;
@@ -39,7 +38,7 @@ export default class OrderService {
       }).catch((err) => {
         // Transaction has been rolled back
         // err is whatever rejected the promise chain returned to the transaction callback
-        console.log('transaction error:', err);
+        throw new Error(err);
       });
     } catch (error) {
       throw new Error(error);
