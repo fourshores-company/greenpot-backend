@@ -128,4 +128,15 @@ export default class MealService {
   static async findIngredientInMeal(payLoad) {
     return MealIngredient.findOne({ where: payLoad });
   }
+
+  /**
+   * Search for multiple meals
+   * @param {object} query - object containing query key and value
+   * e.g { id: 5 }
+   * @returns {promise-Object} - A promise object with meal details
+   * @memberof MealService
+   */
+  static async findMultipleMeals(query) {
+    return Meal.findAll({ where: query });
+  }
 }
