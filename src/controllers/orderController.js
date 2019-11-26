@@ -26,6 +26,7 @@ export default class OrderController {
     const payload = {
       userId: req.tokenData.id,
       meals,
+      price: req.orderPrice,
     };
     try {
       const createdOrder = await createOrder(payload);

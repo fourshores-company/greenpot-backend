@@ -32,6 +32,16 @@ export default class OrderMiddleware {
         if (found === undefined) allMealsFound = false;
       });
       if (!allMealsFound) return errorResponse(res, { code: 400, message: 'one of the meals does not exist' });
+      // calculate the price of the entire meal and add it to the request
+      const price = queriedMeals
+        .map((queriedMeal) => {
+          // get the quantity of the meal ordered
+          const meal = meals.find((_meal) => _meal.mealId === queriedMeal.id);
+          // multiply by the price to get the price for the meal
+          return queriedMeal.price * meal.quantity;
+        })
+        .reduce((accumulator, current) => accumulator + current);
+      req.orderPrice = price;
       next();
     } catch (error) {
       errorResponse(res, { code: 400, message: error });

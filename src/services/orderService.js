@@ -23,7 +23,7 @@ export default class OrderService {
     //  Start transaction
     // P.S remeber to include the price
       return sequelize.transaction((t) => Order.create({
-        userId: payload.userId,
+        userId: payload.userId, price: payload.price,
       }, { transaction: t }).then((order) => {
         // add order id to the meals before uploading
         const updateMealArray = [...payload.meals];
@@ -31,15 +31,16 @@ export default class OrderService {
           meal.orderId = order.id;
         });
         return OrderMeal.bulkCreate(updateMealArray, { transaction: t });
-      })).then((result) => {
-        // Transaction has been committed
-        // result is whatever the result of the promise chain returned to the transaction callback
-        return result;
-      }).catch((err) => {
+      }))
+      // Transaction has been committed
+      // result is whatever the result of the promise chain returned to the transaction callback
+
+        .then((result) => result)
+        .catch((err) => {
         // Transaction has been rolled back
         // err is whatever rejected the promise chain returned to the transaction callback
-        throw new Error(err);
-      });
+          throw new Error(err);
+        });
     } catch (error) {
       throw new Error(error);
     }
