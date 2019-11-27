@@ -196,4 +196,22 @@ export default class Toolbox {
       return newItem;
     });
   }
+
+  /**
+   * Calculates the total price of a user's order
+   * @static
+   * @param {array} orderMeals - An array of objects containing the order details [{mealId:1, quantity:2}].
+   * @param {array} mealDetails - An array of objects. It contains the details of the meals queried from the database.
+   * @returns {number} total price
+   * @memberof Toolbox
+   */
+  static calculateOrderPrice(orderMeals, mealDetails) {
+    return mealDetails.map((mealDetail) => {
+      // get the quantity of the meal ordered
+      const meal = orderMeals.find((orderMeal) => orderMeal.mealId === mealDetail.id);
+      // multiply by the price to get the price for the meal
+      return mealDetail.price * meal.quantity;
+    })
+      .reduce((accumulator, current) => accumulator + current);
+  }
 }
