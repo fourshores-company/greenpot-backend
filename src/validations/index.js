@@ -3,6 +3,7 @@ import PasswordValidation from './passwordValidation';
 import ProfileValidation from './profileValidation';
 import IngredientValidations from './ingredientValidation';
 import MealValidation from './mealValidation';
+import OrderValidation from './orderValidation';
 
 
 export {
@@ -11,4 +12,5 @@ export {
   ProfileValidation,
   IngredientValidations,
   MealValidation,
+  OrderValidation
 };

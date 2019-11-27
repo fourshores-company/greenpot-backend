@@ -31,6 +31,10 @@
         {
             "name": "Meal",
             "description": "Endpoint for Meals"
+        },
+        {
+            "name": "Order",
+            "description": "Endpoint for Orders"
         }
     ],
     "paths": {
@@ -904,9 +908,75 @@
                     }
                 }
             }
+        },
+        
+        "/order": {
+            "post": {
+                "description": "make an order",
+                "summary": "A user can make an order",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing the meals for the order",
+                        "schema": {
+                            "$ref": "#/requestBody/createOrder"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {
+        "createOrder": {
+            "title": "User registration request",
+            "type": "object",
+            "properties": {
+                "meals": {
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "example": {
+                "meals": [
+                    {"mealId":1, "quantity":10},
+                    {"mealId":2, "quantity":10}
+                    ]
+            },
+            "required": [
+                "firstName, lastName, email, password"
+            ]
+        },
         "userRegistration": {
             "title": "User registration request",
             "type": "object",
