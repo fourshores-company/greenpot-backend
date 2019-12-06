@@ -140,7 +140,6 @@ describe('Admin meal tests', () => {
       });
     expect(response).to.have.status(404);
     expect(response.body.status).to.equal('fail');
-    expect(response.body.error.message).to.equal('meal does not exist in our database');
   });
   it('should successfully return all meals', async () => {
     const response = await chai
@@ -286,7 +285,6 @@ describe('Admin meal tests', () => {
       .set('Cookie', `token=${adminUser.token};`);
     expect(response).to.have.status(404);
     expect(response.body.status).to.equal('fail');
-    expect(response.body.error.message).to.equal('meal does not exist in our database');
   });
   it('should return an error if format of the meal or category id is wrong', async () => {
     const response = await chai

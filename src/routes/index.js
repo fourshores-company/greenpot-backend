@@ -6,6 +6,7 @@ import userRoutes from './user';
 import ingredientRoutes from './ingredient';
 import mealRoutes from './meal';
 import orderRoutes from './order';
+import cartRoutes from './cart';
 
 const router = Router();
 router.use('/auth', authRoutes);
@@ -13,6 +14,7 @@ router.use('/user', userRoutes);
 router.use('/ingredient', ingredientRoutes);
 router.use('/meal', mealRoutes);
 router.use('/order', orderRoutes);
+router.use('/cart', cartRoutes);
 router.use('/docs', swaggerUi.serve);
 router.get('/docs', swaggerUi.setup(swaggerDocument));
 

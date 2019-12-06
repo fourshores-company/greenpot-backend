@@ -10,8 +10,8 @@ const {
 } = OrderService;
 
 /**
- * Ingredients Controller
- * @class IngredientController
+ * Order Controller
+ * @class OrderController
  */
 export default class OrderController {
   /**
