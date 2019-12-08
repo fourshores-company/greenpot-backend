@@ -909,7 +909,6 @@
                 }
             }
         },
-        
         "/order": {
             "post": {
                 "description": "make an order",
@@ -951,6 +950,161 @@
                     }
                 }
             }
+        },
+        "/cart": {
+            "post": {
+                "description": "add meal to cart",
+                "summary": "A user can add a meal to cart",
+                "tags": [
+                    "Cart"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing the meals",
+                        "schema": {
+                            "$ref": "#/requestBody/addCart"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/cart/": {
+            "get": {
+                "description": "Get meals in cart",
+                "summary": "A logged in user can get all meals in his cart",
+                "tags": [
+                    "Cart"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/cart/{mealId}/{quantity}": {
+            "patch": {
+                "description": "update quantity of meal in cart",
+                "summary": "A user can update the quantity of meal in cart",
+                "tags": [
+                    "Cart"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "mealId",
+                        "required": true,
+                        "description": "The mealId"
+                    },
+                    {
+                        "in": "path",
+                        "name": "quantity",
+                        "required": true,
+                        "description": "The quantity of meal"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/cart/{mealId}": {
+            "delete": {
+                "description": "Deletes a meal in cart",
+                "summary": "An user can delete a meal in cart",
+                "tags": [
+                    "Cart"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "mealId",
+                        "required": true,
+                        "description": "The Id of the meal in cart"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {
@@ -974,7 +1128,30 @@
                     ]
             },
             "required": [
-                "firstName, lastName, email, password"
+                "meals"
+            ]
+        },
+        "addCart": {
+            "title": "User registration request",
+            "type": "object",
+            "properties": {
+                "meals": {
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "example": {
+                "meals": [
+                    {"mealId":1, "quantity":10},
+                    {"mealId":2, "quantity":10}
+                    ]
+            },
+            "required": [
+                "meals"
             ]
         },
         "userRegistration": {

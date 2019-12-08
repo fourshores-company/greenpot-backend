@@ -4,6 +4,7 @@ import IngredientService from './ingredientService';
 import MealService from './mealService';
 import CategoryService from './categoryService';
 import OrderService from './orderService';
+import CartService from './cartService';
 
 export {
   UserService,
@@ -12,4 +13,5 @@ export {
   MealService,
   CategoryService,
   OrderService,
+  CartService,
 };

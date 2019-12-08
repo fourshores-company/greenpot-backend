@@ -23,4 +23,20 @@ export default class OrderValidations {
     if (error) throw error.details[0].context.label;
     return true;
   }
+
+  /**
+    * validation for parameters on deleting a meal
+    * @param {object} payload
+    * @returns {object | boolean} - returns an error object or valid boolean
+    * @memberof MealValidation
+    */
+  static validateMeal(payload) {
+    const schema = {
+      mealId: joi.number().positive().required().label('Please enter a positive number'),
+      quantity: joi.number().positive().label('Please enter a positive number'),
+    };
+    const { error } = joi.validate({ ...payload }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
 }

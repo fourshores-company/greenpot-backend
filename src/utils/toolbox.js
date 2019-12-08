@@ -214,4 +214,21 @@ export default class Toolbox {
     })
       .reduce((accumulator, current) => accumulator + current);
   }
+
+  /**
+   * match id input array with equivalent item ids in database
+   * @static
+   * @param {array} items - item array with ids
+   * @param {array} databaseItems = databaese items array with equivalent values
+   * @returns {boolean} true if all input items match items in database, false if not
+   * @memberof Toolbox
+   */
+  static matchIds(items, databaseItems) {
+    let allItemsMatch = true;
+    items.forEach((id) => {
+      const match = databaseItems.find((databaseValue) => databaseValue.id === id);
+      if (match === undefined) allItemsMatch = false;
+    });
+    return allItemsMatch;
+  }
 }
