@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import {
   UserService, RoleService, IngredientService, MealService,
-  CategoryService
+  CategoryService, OrderService, CartService
 } from '../services';
 import { Toolbox } from '../utils';
 
@@ -10,6 +10,8 @@ const { assignRole } = RoleService;
 const { addIngredient } = IngredientService;
 const { addMeal, addIngredientToMeal } = MealService;
 const { addCategory } = CategoryService;
+const { createOrder, findOrder } = OrderService;
+const { addMealsToCart} = CartService;
 const { createToken } = Toolbox;
 
 export const newUser = {
@@ -140,4 +142,8 @@ export const addCategoryToDb = async (category) => {
 
 export const removeMealFromDb = async (payLoad) => {
   await MealService.deleteMealBykey(payLoad);
+};
+
+export const addCartToDb = async (payload) => {
+  await addMealsToCart(payload);
 };
