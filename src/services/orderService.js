@@ -3,7 +3,7 @@ import db from '../models';
 
 
 const {
-  Order, OrderMeal, sequelize,
+  Order, OrderMeal, DeliverOrder, sequelize,
 } = db;
 
 /**
@@ -23,14 +23,15 @@ export default class OrderService {
     //  Start transaction
     // P.S remeber to include the price
       return sequelize.transaction((t) => Order.create({
-        userId: payload.userId, price: payload.price,
+        userId: payload.userId, price: payload.price, paystackReference: payload.reference,
       }, { transaction: t }).then((order) => {
         // add order id to the meals before uploading
         const updateMealArray = [...payload.meals];
         updateMealArray.forEach((meal) => {
           meal.orderId = order.id;
         });
-        return OrderMeal.bulkCreate(updateMealArray, { transaction: t });
+        return OrderMeal.bulkCreate(updateMealArray, { transaction: t })
+          .map((values) => values.get({ plain: true }));
       }))
       // Transaction has been committed
       // result is whatever the result of the promise chain returned to the transaction callback
@@ -54,7 +55,7 @@ export default class OrderService {
    * @memberof OrderService
    */
   static async findOrder(keys) {
-    return Order.findOne({ where: keys });
+    return Order.findOne({ raw: true, where: keys });
   }
 
   /**
@@ -82,5 +83,20 @@ export default class OrderService {
     const numberOfRowsDeleted = await Order.destroy({ where: keys });
     if (!numberOfRowsDeleted) throw new ApiError(404, 'Not Found');
     return true;
+  }
+
+  /**
+   * create a delivery
+   * @param {object} payload - delivery data { userId, orderId, address }
+   * @returns {Promis-Object} A promise object with user details
+   * @memberof OrderService
+   */
+  static async createDelivery(payload) {
+    try {
+      const { dataValues: delivery } = await DeliverOrder.create(payload);
+      return delivery;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

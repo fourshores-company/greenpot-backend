@@ -37,7 +37,7 @@ export default class CartService {
    * @memberof CartService
    */
   static async getMealsInCart(key) {
-    return Cart.findAll({ where: key });
+    return Cart.findAll({ raw: true, where: key });
   }
 
   /**

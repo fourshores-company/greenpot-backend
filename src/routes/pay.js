@@ -8,7 +8,7 @@ const { authenticate, isVerified } = AuthMiddleware;
 const {
   withPaystack,
 } = PayController;
-router.get('/paystack', authenticate, isVerified, withPaystack);
+router.post('/paystack', authenticate, isVerified, withPaystack);
 // router.get('/paystack/status', payStatus);
 
 export default router;

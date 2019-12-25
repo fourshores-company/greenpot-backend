@@ -32,11 +32,22 @@ describe('Pay for orders', () => {
   it('should successfully create paystack url for specific order', async () => {
     const response = await chai
       .request(server)
-      .get('/v1.0/api/pay/paystack')
-      .set('Cookie', `token=${normalUser.token};`);
+      .post('/v1.0/api/pay/paystack')
+      .set('Cookie', `token=${normalUser.token};`)
+      .send({ address: '123 corbin street, off apapa, lagos, nigeria' });
     expect(response).to.have.status(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
     expect(response.body.data.message).to.be.a('string');
+  });
+  it('should fail if input parameter is in wrong format', async () => {
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/pay/paystack')
+      .set('Cookie', `token=${normalUser.token};`)
+      .send({ address: 50 });
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error).to.be.a('object');
   });
 });

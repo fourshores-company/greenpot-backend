@@ -909,10 +909,49 @@
                 }
             }
         },
-        "/order": {
+        "/order/paystack/verify-client": {
             "post": {
-                "description": "make an order",
-                "summary": "A user can make an order",
+                "description": "create an order via client after paystack payment",
+                "summary": "User creates an order in client side after paystack payment",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "reference",
+                        "required": true,
+                        "description": "paystack payment reference"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/order/paystack/verify-server": {
+            "post": {
+                "description": "create an order via server after paystack payment",
+                "summary": "User creates an order in server side after paystack payment",
                 "tags": [
                     "Order"
                 ],
@@ -929,14 +968,14 @@
                         "in": "body",
                         "name": "body",
                         "required": true,
-                        "description": "This is the request body object containing the meals for the order",
+                        "description": "callback request body containing paystack payment details",
                         "schema": {
-                            "$ref": "#/requestBody/createOrder"
+                            "$ref": "#/requestBody/orderServer"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Success"
                     },
                     "400": {
@@ -1105,27 +1144,120 @@
                     }
                 }
             }
+        },
+        "/pay/paystack": {
+            "post": {
+                "description": "pay for order via paystack",
+                "summary": "A user can pay for their order via paystack",
+                "tags": [
+                    "Pay"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing payment details",
+                        "schema": {
+                            "$ref": "#/requestBody/payOrder"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
         }
     },
     "requestBody": {
-        "createOrder": {
+        "orderServer": {
             "title": "User registration request",
             "type": "object",
             "properties": {
-                "meals": {
+                "event": {
+                    "description": "payment event",
+                    "type": "string"
+                },
+                "data": {
+                    "description": "payment data",
                     "schema": {
-                        "type": "array",
+                        "type": "object",
                         "items": {
-                            "type": "object"
+                            "status": {
+                                "description": "payment status",
+                                "type": "string"
+                            },
+                            "reference": {
+                                "desctription": "payment reference",
+                                "type": "string"
+                            },
+                            "gateway_response": {
+                                "desctription": "payment gateway response",
+                                "type": "string"
+                            },
+                            "metadata" : {
+                                "description": "order metadata",
+                                "type": "object",
+                                "items": {
+                                    "userId" : {
+                                        "description": "user id",
+                                        "type": "integer"
+                                    },
+                                    "meals": {
+                                        "description": "meals in order",
+                                        "schema": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "address": {
+                                        "description": "order delivery address",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "price of order",
+                                        "type": "integer"
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             },
             "example": {
-                "meals": [
-                    {"mealId":1, "quantity":10},
-                    {"mealId":2, "quantity":10}
-                    ]
+                "event": "charge.success",
+                "data": {
+                  "status": "success",
+                  "reference": "7vv4mug68h",
+                  "gateway_response": "Approved",
+                  "metadata": {
+                    "userId": 4,
+                    "meals": [{ "mealId": 3, "quantity": 10 }],
+                    "address": "123 corbin street, off apapa, lagos, nigeria",
+                    "price": 1000
+                  }
+                }
             },
             "required": [
                 "meals"
@@ -1454,6 +1586,22 @@
             "required": [
                 "mealId", "categoryId"
             ]
+        },
+        "payOrder": {
+            "title": "pay for order",
+            "type": "object",
+            "properties": {
+                "address": {
+                    "description": "address for delivery",
+                    "type": "string"
+                },
+                "example" :{
+                    "address":"123 corbin street, off apapa, lagos, nigeria"
+                },
+                "required": [
+                    "address"
+                ]
+            }
         }
     }
 }

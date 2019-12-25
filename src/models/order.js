@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DOUBLE,
       allowNull: true
+    },
+    paystackReference: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {});
   Order.associate = (models) => {
@@ -25,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       through: 'OrderMeals',
       as: 'meals',
       foreignKey: 'orderId'
+    });
+    Order.hasOne(models.DeliverOrder, {
+      foreignKey: 'orderId',
+      as: 'address'
     });
   };
   return Order;
