@@ -1,10 +1,9 @@
-import { OrderValidation } from '../validations';
 import { Toolbox } from '../utils';
-import { OrderService, MealService } from '../services';
+import { OrderService } from '../services';
 
-const { errorResponse, calculateOrderPrice } = Toolbox;
-const { createOrderValidation } = OrderValidation;
-const { findMultipleMeals } = MealService;
+const { errorResponse } = Toolbox;
+const { findOrder } = OrderService;
+const IP = ['52.31.139.75', '52.49.173.169', '52.214.14.220', '127.0.0.1'];
 /**
  * Middleware for order routes
  * @class OrderMiddleware
@@ -18,25 +17,38 @@ export default class OrderMiddleware {
    * @returns {object} - return an object {error or response}
    * @memberof OrderMiddleware
    */
-  static async beforeCreatingOrder(req, res, next) {
-    const { meals } = req.body;
+  static async orderChecks(req, res, next) {
+    let reference;
+    if (req.query.reference) {
+      reference = req.query.reference;
+    } else if (req.body.data) {
+      reference = req.body.data.reference;
+    }
     try {
-      createOrderValidation({ meals });
-      const mealIdArray = meals.map((meal) => meal.mealId);
-      // query for the meals to check if they exist
-      const queriedMeals = await findMultipleMeals({ id: mealIdArray });
-      // check if all meal id's were found and returned
-      let allMealsFound = true;
-      mealIdArray.forEach((mealId) => {
-        const found = queriedMeals.find((meal) => meal.id === mealId);
-        if (found === undefined) allMealsFound = false;
-      });
-      if (!allMealsFound) return errorResponse(res, { code: 400, message: 'one of the meals does not exist' });
-      const price = calculateOrderPrice(meals, queriedMeals);
-      req.orderPrice = price;
+      const orderInDatabase = await findOrder({ paystackReference: reference });
+      if (orderInDatabase) return errorResponse(res, { code: 400, message: 'Order with reference has already been created in database' });
       next();
     } catch (error) {
       errorResponse(res, { code: 400, message: error });
+    }
+  }
+
+  /**
+   * verify paystack IP whitelists
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - return an object {error or response}
+   * @memberof OrderMiddleware
+   */
+  static async whitelist(req, res, next) {
+    try {
+      const reqIP = req.headers.host.split(':');
+      const permitted = IP.includes(reqIP[0]);
+      if (permitted) return next();
+      return errorResponse(res, { code: 403, message: 'Halt! You\'re not a recognized payment webhook IP' });
+    } catch (error) {
+      errorResponse(res, {});
     }
   }
 }
