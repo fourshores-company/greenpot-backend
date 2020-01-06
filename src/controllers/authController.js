@@ -29,7 +29,20 @@ export default class AuthController {
    */
   static async signup(req, res) {
     try {
-      const { body } = req;
+      const body = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password,
+        gender: req.body.gender,
+        birthDate: req.body.birthDate,
+        addressLine1: req.body.addressLine1,
+        addressLine2: req.body.addressLine2,
+        city: req.body.city,
+        state: req.body.state,
+        country: req.body.country,
+        phoneNumber: req.body.phoneNumber,
+      };
       const user = await addUser({ ...body });
       const assignedRole = await assignRole(user.id, 3);
       user.token = createToken({
