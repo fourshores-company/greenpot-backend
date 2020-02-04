@@ -3,16 +3,18 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import server from '..';
 import {
-  userA, userInDatabase, removeUserFromDb, addMealToDb, addCartToDb
+  userA, userB, userInDatabase, removeUserFromDb, addMealToDb, addCartToDb
 } from './dummyData';
 
 chai.use(chaiHttp);
 
 describe('Users can place orders', () => {
   let normalUser;
+  let adminUser;
   let meal1;
   before(async () => {
     normalUser = await userInDatabase(userA, 3);
+    adminUser = await userInDatabase(userB, 2);
     meal1 = await addMealToDb({
       name: 'chicken pie',
       recipe: 'http://www.test.com',
@@ -57,6 +59,24 @@ describe('Users can place orders', () => {
     expect(response).to.have.status(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.error).to.be.a('object');
+  });
+  it('should sucessfully get all orders by adim', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
+  it('should return an error if a user is unauthorized', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order')
+      .set('Cookie', `token=${normalUser.token};`);
+    expect(response).to.have.status(403);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
   });
 });
 
