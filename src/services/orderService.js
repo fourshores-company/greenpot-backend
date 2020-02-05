@@ -3,7 +3,7 @@ import db from '../models';
 
 
 const {
-  Order, OrderMeal, DeliverOrder, sequelize,
+  Order, OrderMeal, DeliverOrder, Meal, sequelize,
 } = db;
 
 /**
@@ -95,6 +95,37 @@ export default class OrderService {
     try {
       const { dataValues: delivery } = await DeliverOrder.create(payload);
       return delivery;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * get all orders
+   * @returns {promise-object} - all orders
+   * @memberof OrderService
+   */
+  static async getAllOrders() {
+    try {
+      const orders = await Order.findAll({
+        include: [{
+          model: Meal,
+          as: 'meals',
+          required: false,
+          attributes: ['name'],
+          through: {
+            model: OrderMeal,
+            attributes: ['quantity'],
+          },
+        }, {
+          model: DeliverOrder,
+          as: 'address',
+          attributes: ['address'],
+        }],
+        attributes: ['id', 'userId', 'status', 'price'],
+        where: {}
+      }).map((values) => values.get({ plain: true }));
+      return orders;
     } catch (error) {
       throw new Error(error);
     }

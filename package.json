@@ -12,7 +12,7 @@
     "migrate:reset": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:all",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset && cross-env NODE_ENV=test npm run migrate && cross-env NODE_ENV=test npm run seed",
-    "start:dev": "npm run migrate && npm run seed && nodemon --exec babel-node ./src/index.js"
+    "start:dev": "npm run migrate && nodemon --exec babel-node ./src/index.js"
   },
   "repository": {
     "type": "git",

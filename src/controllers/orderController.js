@@ -1,4 +1,6 @@
-import { OrderService, CartService, } from '../services';
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+import { OrderService, CartService, UserService } from '../services';
 import { Toolbox, Payments } from '../utils';
 
 const {
@@ -6,12 +8,14 @@ const {
 } = Toolbox;
 
 const {
-  createOrder, createDelivery
+  createOrder, createDelivery, getAllOrders
 } = OrderService;
 const {
   deleteCartMealByKey,
 } = CartService;
-
+const {
+  findUser,
+} = UserService;
 /**
  * Order Controller
  * @class OrderController
@@ -81,4 +85,39 @@ export default class OrderController {
       errorResponse(res, {});
     }
   }
+
+  /**
+   * get all orders
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the created order.
+   * @memberof OrderController
+   */
+  static async viewOrders(req, res) {
+    try {
+      const orders = await getAllOrders();
+      if (!orders.length) return errorResponse(res, { code: 404, message: 'There are no orders' });
+      for (const items of orders) {
+        const {
+          firstName, lastName, phoneNumber
+        } = await findUser({ id: items.userId });
+        delete items.userId;
+        items.user = { firstName, lastName, phoneNumber };
+      }
+      return successResponse(res, { orders });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  // /**
+  //   * get orders by status
+  //  * @param {object} req
+  //  * @param {object} res
+  //  * @returns {JSON } A JSON response with the created order.
+  //  * @memberof OrderController
+  // */
+  // static ordersByStatus(req, res) {
+
+  // }
 }
