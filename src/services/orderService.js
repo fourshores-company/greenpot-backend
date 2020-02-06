@@ -59,18 +59,23 @@ export default class OrderService {
   }
 
   /**
-   * update an order given a key
-   * @param {object} updateData - data to update
+   * update order status
+   * @param {object} status - status to update
    * @param {object} keys - query key to update
    * @returns {promise-object | error} A promise object with order detail
    * @memberof OrderService
    */
-  static async updateOrderBykey(updateData, keys) {
-    const [rowaffected, [order]] = await Order.update(
-      updateData, { returning: true, where: keys }
-    );
-    if (!rowaffected) throw new ApiError(404, 'Not Found');
-    return order.dataValues;
+  static async updateOrderStatus(status, keys) {
+    try {
+      const [rowaffected, [order]] = await Order.update(
+        status, { returning: true, where: keys }
+      );
+      if (!rowaffected) throw new ApiError(404, 'Not Found');
+      return order.dataValues;
+    } catch (error) {
+      console.log('error: ', error);
+      throw new Error(error);
+    }
   }
 
   /**

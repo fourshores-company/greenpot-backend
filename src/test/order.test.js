@@ -12,6 +12,7 @@ describe('Users can place orders', () => {
   let normalUser;
   let adminUser;
   let meal1;
+  let orderId;
   before(async () => {
     normalUser = await userInDatabase(userA, 3);
     adminUser = await userInDatabase(userB, 2);
@@ -60,11 +61,14 @@ describe('Users can place orders', () => {
     expect(response.body.status).to.equal('fail');
     expect(response.body.error).to.be.a('object');
   });
+
+  // TODO: move these admin actions to separate describe function
   it('should sucessfully get all orders by adim', async () => {
     const response = await chai
       .request(server)
       .get('/v1.0/api/order')
       .set('Cookie', `token=${adminUser.token};`);
+    orderId = response.body.data.orders[0].id;
     expect(response).to.have.status(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
@@ -78,6 +82,17 @@ describe('Users can place orders', () => {
     expect(response.body.status).to.equal('fail');
     expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
   });
+
+  it('should sucessfully update order by adim', async () => {
+    const response = await chai
+      .request(server)
+      .patch(`/v1.0/api/order/${orderId}?status=completed`)
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
+  // TODO: add more 'should' instances (failures).
 });
 
 describe('User can place orders via server api', () => {

@@ -28,12 +28,29 @@ export default class OrderValidations {
     * validation for parameters on deleting a meal
     * @param {object} payload
     * @returns {object | boolean} - returns an error object or valid boolean
-    * @memberof MealValidation
+    * @memberof OrderValidations
     */
   static validateMeal(payload) {
     const schema = {
       mealId: joi.number().positive().required().label('Please enter a positive number'),
       quantity: joi.number().positive().label('Please enter a positive number'),
+    };
+    const { error } = joi.validate({ ...payload }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
+
+  /**
+   * validation for parameters on update of order status
+   * @param {object} payload
+    * @returns {object | boolean} - returns an error object or valid boolean
+    * @memberof OrderValidations
+   */
+  static validateParameters(payload) {
+    const schema = {
+      id: joi.number().positive().required().label('Please enter a positive number'),
+      status: joi.string().valid('pending', 'completed')
+        .label('please input a status (completed or pending)'),
     };
     const { error } = joi.validate({ ...payload }, schema);
     if (error) throw error.details[0].context.label;

@@ -1,8 +1,10 @@
 import { Toolbox } from '../utils';
 import { OrderService } from '../services';
+import { OrderValidation } from '../validations';
 
 const { errorResponse } = Toolbox;
 const { findOrder } = OrderService;
+const { validateParameters } = OrderValidation;
 const IP = ['52.31.139.75', '52.49.173.169', '52.214.14.220', '127.0.0.1'];
 /**
  * Middleware for order routes
@@ -49,6 +51,29 @@ export default class OrderMiddleware {
       return errorResponse(res, { code: 403, message: 'Halt! You\'re not a recognized payment webhook IP' });
     } catch (error) {
       errorResponse(res, {});
+    }
+  }
+
+  /**
+   * verify status parameters
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - return an object {error or response}
+   * @memberof OrderMiddleware
+   */
+  static async verifyParameters(req, res, next) {
+    try {
+      const id = Number(req.params.id);
+      validateParameters({
+        id,
+        status: req.param.status,
+      });
+      const orderInDatabase = await findOrder({ id });
+      if (!orderInDatabase) return errorResponse(res, { code: 404, message: 'order does not exist in our database' });
+      next();
+    } catch (error) {
+      errorResponse(res, { code: 400, message: error });
     }
   }
 }
