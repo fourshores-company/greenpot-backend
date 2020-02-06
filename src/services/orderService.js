@@ -73,7 +73,6 @@ export default class OrderService {
       if (!rowaffected) throw new ApiError(404, 'Not Found');
       return order.dataValues;
     } catch (error) {
-      console.log('error: ', error);
       throw new Error(error);
     }
   }
