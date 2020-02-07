@@ -8,7 +8,7 @@ const {
 } = Toolbox;
 
 const {
-  createOrder, createDelivery, getAllOrders
+  createOrder, createDelivery, getAllOrders, updateOrderStatus
 } = OrderService;
 const {
   deleteCartMealByKey,
@@ -110,14 +110,21 @@ export default class OrderController {
     }
   }
 
-  // /**
-  //   * get orders by status
-  //  * @param {object} req
-  //  * @param {object} res
-  //  * @returns {JSON } A JSON response with the created order.
-  //  * @memberof OrderController
-  // */
-  // static ordersByStatus(req, res) {
-
-  // }
+  /**
+    * update order status
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the created order.
+   * @memberof OrderController
+  */
+  static async updateStatus(req, res) {
+    try {
+      const id = Number(req.params.id);
+      const status = req.query;
+      const order = await updateOrderStatus(status, { id });
+      successResponse(res, { message: 'order successfully updated', order });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
 }
