@@ -8,7 +8,7 @@ const {
 } = Toolbox;
 
 const {
-  createOrder, createDelivery, getAllOrders, updateOrderStatus
+  createOrder, createDelivery, getAllOrders, updateOrderStatus, findOrdersBykey
 } = OrderService;
 const {
   deleteCartMealByKey,
@@ -105,6 +105,25 @@ export default class OrderController {
         items.user = { firstName, lastName, phoneNumber };
       }
       return successResponse(res, { orders });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * get orders by user
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the created order.
+   * @memberof OrderController
+   */
+  static async getUserOrders(req, res) {
+    try {
+      console.log('user data: ', req.tokenData);
+      const { id } = req.tokenData;
+      const userOrders = await findOrdersBykey({ userId: id });
+      if (!userOrders.length) return errorResponse(res, { code: 404, message: 'There are no orders' });
+      return successResponse(res, { ...userOrders });
     } catch (error) {
       errorResponse(res, {});
     }

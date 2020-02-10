@@ -4,7 +4,7 @@
   "description": "backend of greenpot food service",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html mocha src/test/*.js --timeout 10000 -c --require @babel/register --exit",
+    "test": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html mocha src/test/order.test.js --timeout 10000 -c --require @babel/register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start": "npm run migrate && npm run seed && node dist/index.js",
     "build": "babel src -d dist",

@@ -61,12 +61,22 @@ describe('Users can place orders', () => {
     expect(response.body.status).to.equal('fail');
     expect(response.body.error).to.be.a('object');
   });
+  it('should successfully get a users orders', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/')
+      .set('Cookie', `token=${normalUser.token};`);
+    console.log('response: ', response.body);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
 
   // TODO: move these admin actions to separate describe function
   it('should sucessfully get all orders by adim', async () => {
     const response = await chai
       .request(server)
-      .get('/v1.0/api/order')
+      .get('/v1.0/api/order/all')
       .set('Cookie', `token=${adminUser.token};`);
     orderId = response.body.data.orders[0].id;
     expect(response).to.have.status(200);
@@ -76,7 +86,7 @@ describe('Users can place orders', () => {
   it('should return an error if a user is unauthorized', async () => {
     const response = await chai
       .request(server)
-      .get('/v1.0/api/order')
+      .get('/v1.0/api/order/all')
       .set('Cookie', `token=${normalUser.token};`);
     expect(response).to.have.status(403);
     expect(response.body.status).to.equal('fail');
