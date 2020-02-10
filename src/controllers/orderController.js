@@ -119,7 +119,6 @@ export default class OrderController {
    */
   static async getUserOrders(req, res) {
     try {
-      console.log('user data: ', req.tokenData);
       const { id } = req.tokenData;
       const userOrders = await findOrdersBykey({ userId: id });
       if (!userOrders.length) return errorResponse(res, { code: 404, message: 'There are no orders' });
