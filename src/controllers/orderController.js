@@ -123,7 +123,7 @@ export default class OrderController {
       const { id } = req.tokenData;
       const userOrders = await findOrdersBykey({ userId: id });
       if (!userOrders.length) return errorResponse(res, { code: 404, message: 'There are no orders' });
-      return successResponse(res, { ...userOrders });
+      return successResponse(res, { userOrders });
     } catch (error) {
       errorResponse(res, {});
     }

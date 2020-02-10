@@ -66,7 +66,6 @@ describe('Users can place orders', () => {
       .request(server)
       .get('/v1.0/api/order/')
       .set('Cookie', `token=${normalUser.token};`);
-    console.log('response: ', response.body);
     expect(response).to.have.status(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
