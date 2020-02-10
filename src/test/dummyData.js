@@ -10,7 +10,6 @@ const { assignRole } = RoleService;
 const { addIngredient } = IngredientService;
 const { addMeal, addIngredientToMeal } = MealService;
 const { addCategory } = CategoryService;
-const { createOrder, findOrder } = OrderService;
 const { addMealsToCart} = CartService;
 const { createToken } = Toolbox;
 

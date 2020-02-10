@@ -59,6 +59,39 @@ export default class OrderService {
   }
 
   /**
+   * Find multiple orders given the key
+   * @param {object} keys - object containing query key and value
+   * e.g { id: 5 }
+   * @returns {promise-Object} - A promise object with order details
+   * @memberof OrderService
+   */
+  static async findOrdersBykey(keys) {
+    try {
+      const orders = await Order.findAll({
+        include: [{
+          model: Meal,
+          as: 'meals',
+          required: false,
+          attributes: ['name'],
+          through: {
+            model: OrderMeal,
+            attributes: ['quantity'],
+          },
+        }, {
+          model: DeliverOrder,
+          as: 'address',
+          attributes: ['address'],
+        }],
+        attributes: ['id', 'userId', 'status', 'price'],
+        where: keys
+      }).map((values) => values.get({ plain: true }));
+      return orders;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
    * update order status
    * @param {object} status - status to update
    * @param {object} keys - query key to update
