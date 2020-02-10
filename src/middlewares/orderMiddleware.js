@@ -4,7 +4,7 @@ import { OrderValidation } from '../validations';
 
 const { errorResponse } = Toolbox;
 const { findOrder } = OrderService;
-const { validateParameters } = OrderValidation;
+const { validateParameters, validateQuery } = OrderValidation;
 const IP = ['52.31.139.75', '52.49.173.169', '52.214.14.220', '127.0.0.1'];
 /**
  * Middleware for order routes
@@ -67,10 +67,27 @@ export default class OrderMiddleware {
       const id = Number(req.params.id);
       validateParameters({
         id,
-        status: req.param.status,
+        status: req.params.status,
       });
       const orderInDatabase = await findOrder({ id });
       if (!orderInDatabase) return errorResponse(res, { code: 404, message: 'order does not exist in our database' });
+      next();
+    } catch (error) {
+      errorResponse(res, { code: 400, message: error });
+    }
+  }
+
+  /**
+   * order query check
+   * @param {object} req
+   * @param {object} res
+   * @param {object} next
+   * @returns {object} - return an object {error or response}
+   * @memberof OrderMiddleware
+   */
+  static async queryCheck(req, res, next) {
+    try {
+      validateQuery(req.query);
       next();
     } catch (error) {
       errorResponse(res, { code: 400, message: error });

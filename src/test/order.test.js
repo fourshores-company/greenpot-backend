@@ -82,6 +82,36 @@ describe('Users can place orders', () => {
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
   });
+  it('should successfully get orders by status as admin', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/key?status=pending')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
+  it('should return an error while getting orders by status if there are no orders', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/key?status=completed')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error).to.be.a('object');
+    expect(response.body.error.message).to.equal('There are no completed orders');
+  });
+  it('should return an error while getting orders if status parameter is wrong', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/key?status=boogie')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error).to.be.a('object');
+    expect(response.body.error.message).to.equal('please input a status (completed or pending)');
+  });
+
   it('should return an error if a user is unauthorized', async () => {
     const response = await chai
       .request(server)

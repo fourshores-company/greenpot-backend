@@ -145,4 +145,22 @@ export default class OrderController {
       errorResponse(res, {});
     }
   }
+
+  /**
+   * get orders by status
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the created order.
+   * @memberof OrderController
+   */
+  static async viewOrdersByStatus(req, res) {
+    try {
+      const { status } = req.query;
+      const ordersByStatus = await findOrdersBykey({ status });
+      if (!ordersByStatus.length) return errorResponse(res, { code: 404, message: `There are no ${status} orders` });
+      return successResponse(res, { ...ordersByStatus });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
 }

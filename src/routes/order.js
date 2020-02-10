@@ -6,16 +6,20 @@ import { PermissionsData } from '../utils';
 const router = Router();
 
 const { authenticate, isVerified } = AuthMiddleware;
-const { whitelist, orderChecks, verifyParameters } = OrderMiddleware;
+const {
+  whitelist, orderChecks, verifyParameters, queryCheck
+} = OrderMiddleware;
 const { verifyRoles } = UserMiddleware;
 const {
-  clientOrder, serverOrder, viewOrders, updateStatus, getUserOrders
+  clientOrder, serverOrder, viewOrders, updateStatus, getUserOrders,
+  viewOrdersByStatus
 } = OrderController;
 const { admin, all } = PermissionsData;
 router.post('/paystack/verify-client', authenticate, verifyRoles(all), isVerified, orderChecks, clientOrder);
 router.post('/paystack/verify-server', whitelist, orderChecks, serverOrder);
 router.get('/all', authenticate, verifyRoles(admin), isVerified, viewOrders);
 router.get('/', authenticate, verifyRoles(all), isVerified, getUserOrders);
+router.get('/key', authenticate, verifyRoles(admin), isVerified, queryCheck, viewOrdersByStatus); // key?status=value
 router.patch('/:id', authenticate, verifyRoles(admin), isVerified, verifyParameters, updateStatus);
 
 export default router;
