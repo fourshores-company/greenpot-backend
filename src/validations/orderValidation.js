@@ -56,4 +56,20 @@ export default class OrderValidations {
     if (error) throw error.details[0].context.label;
     return true;
   }
+
+  /**
+   * validate query parameters
+   * @param {object} payload
+   * @returns {object | boolean} - returns an error object or valid boolean
+   * @memberof OrderValidations
+   */
+  static validateQuery(payload) {
+    const schema = {
+      status: joi.string().valid('pending', 'completed')
+        .label('please input a status (completed or pending)'),
+    };
+    const { error } = joi.validate({ ...payload }, schema);
+    if (error) throw error.details[0].context.label;
+    return true;
+  }
 }
