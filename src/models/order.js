@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'orderId',
       as: 'address'
     });
+    Order.hasOne(models.Feedback, {
+      foreignKey: 'orderId',
+      as: 'feedback'
+    });
   };
   return Order;
 };

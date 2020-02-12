@@ -82,6 +82,17 @@ describe('Users can place orders', () => {
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.be.a('object');
   });
+  it('should return an error if a user is unauthorized', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/all')
+      .set('Cookie', `token=${normalUser.token};`);
+    expect(response).to.have.status(403);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
+  });
+
+  // TODO: move these admin actions to separate describe function
   it('should successfully get orders by status as admin', async () => {
     const response = await chai
       .request(server)
@@ -112,16 +123,49 @@ describe('Users can place orders', () => {
     expect(response.body.error.message).to.equal('please input a status (completed or pending)');
   });
 
-  it('should return an error if a user is unauthorized', async () => {
+  // TODO: move these admin actions to separate describe function
+  it('should successfully add feedback to order', async () => {
     const response = await chai
       .request(server)
-      .get('/v1.0/api/order/all')
-      .set('Cookie', `token=${normalUser.token};`);
-    expect(response).to.have.status(403);
+      .post(`/v1.0/api/order/${orderId}/feedback`)
+      .set('Cookie', `token=${normalUser.token};`)
+      .send({ feedback: 'great order. I was very happy with  the service' });
+    expect(response).to.have.status(201);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
+  it('should fail to add feedback to order if order is short', async () => {
+    const response = await chai
+      .request(server)
+      .post(`/v1.0/api/order/${orderId}/feedback`)
+      .set('Cookie', `token=${normalUser.token};`)
+      .send({ feedback: 'great' });
+    expect(response).to.have.status(400);
     expect(response.body.status).to.equal('fail');
-    expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
+    expect(response.body.error.message).to.equal('Please enter a valid feedback. more than 10 characters and less than 500');
+  });
+  it('should fail to add feedback to order if order id is in wrong format', async () => {
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/order/fg/feedback')
+      .set('Cookie', `token=${normalUser.token};`)
+      .send({ feedback: 'great' });
+    expect(response).to.have.status(400);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Please enter a positive number');
+  });
+  it('should fail to add feedback to order if order does not exist', async () => {
+    const response = await chai
+      .request(server)
+      .post('/v1.0/api/order/1000/feedback')
+      .set('Cookie', `token=${normalUser.token};`)
+      .send({ feedback: 'great order. I was very happy with  the service' });
+    expect(response).to.have.status(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('order does not exist in our database');
   });
 
+  // TODO: move these admin actions to separate describe function
   it('should sucessfully update order by adim', async () => {
     const response = await chai
       .request(server)

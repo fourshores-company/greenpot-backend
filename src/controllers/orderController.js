@@ -8,7 +8,8 @@ const {
 } = Toolbox;
 
 const {
-  createOrder, createDelivery, getAllOrders, updateOrderStatus, findOrdersBykey
+  createOrder, createDelivery, getAllOrders, updateOrderStatus, findOrdersBykey,
+  addOrderFeedback
 } = OrderService;
 const {
   deleteCartMealByKey,
@@ -159,6 +160,25 @@ export default class OrderController {
       const ordersByStatus = await findOrdersBykey({ status });
       if (!ordersByStatus.length) return errorResponse(res, { code: 404, message: `There are no ${status} orders` });
       return successResponse(res, { ...ordersByStatus });
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * add feedback to order
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the created order.
+   * @memberof OrderController
+   */
+  static async orderFeedback(req, res) {
+    try {
+      const orderId = Number(req.params.id);
+      const userId = req.tokenData.id;
+      const { feedback } = req.body;
+      const orderFeedback = await addOrderFeedback({ userId, orderId, feedback });
+      return successResponse(res, { orderFeedback }, 201);
     } catch (error) {
       errorResponse(res, {});
     }
