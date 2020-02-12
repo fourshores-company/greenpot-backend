@@ -3,7 +3,7 @@ import db from '../models';
 
 
 const {
-  Order, OrderMeal, DeliverOrder, Meal, User, Feedback, sequelize,
+  Order, OrderMeal, DeliverOrder, Meal, Feedback, sequelize,
 } = db;
 
 /**
