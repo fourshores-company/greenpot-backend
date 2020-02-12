@@ -179,4 +179,22 @@ export default class OrderService {
     const { dataValues: feedback } = await Feedback.create(payload);
     return feedback;
   }
+
+  /**
+   * get all order feedback
+   * @returns {promise-object} - all orders
+   * @memberof OrderService
+   */
+  static async getAllFeedback() {
+    try {
+      const feedbacks = await Feedback.findAll({
+        attributes: ['id', 'userId', 'orderId', 'feedback', 'updatedAt'],
+        where: {},
+        order: [['updatedAt', 'DESC']],
+      });
+      return feedbacks;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

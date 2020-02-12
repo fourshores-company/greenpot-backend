@@ -12,7 +12,7 @@ const {
 const { verifyRoles } = UserMiddleware;
 const {
   clientOrder, serverOrder, viewOrders, updateStatus, getUserOrders,
-  viewOrdersByStatus, orderFeedback
+  viewOrdersByStatus, orderFeedback, getOrderFeedback
 } = OrderController;
 const { admin, all } = PermissionsData;
 router.post('/paystack/verify-client', authenticate, verifyRoles(all), isVerified, orderChecks, clientOrder);
@@ -22,5 +22,6 @@ router.get('/', authenticate, verifyRoles(all), isVerified, getUserOrders);
 router.get('/key', authenticate, verifyRoles(admin), isVerified, queryCheck, viewOrdersByStatus); // key?status=value
 router.patch('/:id', authenticate, verifyRoles(admin), isVerified, verifyParameters, updateStatus);
 router.post('/:id/feedback', authenticate, verifyRoles(all), isVerified, feedbackCheck, orderFeedback);
+router.get('/feedback', authenticate, verifyRoles(admin), isVerified, getOrderFeedback);
 
 export default router;
