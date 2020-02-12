@@ -990,6 +990,228 @@
                 }
             }
         },
+        "/order/all": {
+            "get": {
+                "description": "Admin get orders",
+                "summary": "An admin can get all orders the database",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/order/{orderId}?status={status}": {
+            "patch": {
+                "description": "Admin change order status",
+                "summary": "An admin can change an order status the database",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "order id"
+                    },
+                    {
+                        "in": "path",
+                        "name": "status",
+                        "required": true,
+                        "description": "order status to change to"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/order": {
+            "get": {
+                "description": "User get their orders",
+                "summary": "A User can get all their orders the database",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/order/key?status={status}": {
+            "get": {
+                "description": "Admin get orders by status",
+                "summary": "An admin can get all orders by status in the database",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "status",
+                        "required": true,
+                        "description": "order status to change to (pending, completed)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/order/{orderId}/feedback": {
+            "post": {
+                "description": "User add service feedback",
+                "summary": "A user can add service feedback to for order",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "description": "This is the request body object containing the feedback",
+                        "schema": {
+                            "$ref": "#/requestBody/feedback"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
+        "/order/feedback": {
+            "get": {
+                "description": "Admin can get all feedback",
+                "summary": "Admin can get all feedback of orders the database",
+                "tags": [
+                    "Order"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Authorization required"
+                    }
+                }
+            }
+        },
         "/cart": {
             "post": {
                 "description": "add meal to cart",
@@ -1594,14 +1816,30 @@
                 "address": {
                     "description": "address for delivery",
                     "type": "string"
-                },
-                "example" :{
-                    "address":"123 corbin street, off apapa, lagos, nigeria"
-                },
-                "required": [
-                    "address"
-                ]
-            }
+                }
+            },
+            "example" :{
+                "address": "123 corbin street, off apapa, lagos, nigeria"
+            },
+            "required": [
+                "address"
+            ]
+        },
+        "feedback": {
+            "title": "feedback for order",
+            "type": "object",
+            "properties": {
+                "feedback": {
+                    "description": "order feedback",
+                    "type": "string"
+                }
+            },
+            "example" :{
+                "feedback": "This was a really nice service. I'll use it again"
+            },
+            "required": [
+                "feedback"
+            ]
         }
     }
 }
