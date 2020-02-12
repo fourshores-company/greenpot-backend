@@ -3,7 +3,7 @@ import db from '../models';
 
 
 const {
-  Order, OrderMeal, DeliverOrder, Meal, sequelize,
+  Order, OrderMeal, DeliverOrder, Meal, Feedback, sequelize,
 } = db;
 
 /**
@@ -166,5 +166,17 @@ export default class OrderService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  /**
+   * Add new order feedback to database
+   * @static
+   * @param {object} payload - new feedback object
+   * @returns {Promis-Object} A promise object with feedback details
+   * @memberof UserService
+   */
+  static async addOrderFeedback(payload) {
+    const { dataValues: feedback } = await Feedback.create(payload);
+    return feedback;
   }
 }

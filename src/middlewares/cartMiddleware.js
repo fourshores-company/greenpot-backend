@@ -1,4 +1,4 @@
-import { OrderValidation } from '../validations';
+import { CartValidation } from '../validations';
 // we might have to rename this validation
 // checkoutValidation maybe, or cartValidation if only used by cart
 // as the orders might not need a middleware
@@ -6,7 +6,7 @@ import { Toolbox } from '../utils';
 import { MealService, CartService } from '../services';
 
 const { errorResponse, matchIds } = Toolbox;
-const { createOrderValidation, validateMeal } = OrderValidation;
+const { createOrderValidation, validateMeal } = CartValidation;
 const { findMultipleMeals } = MealService;
 const { findMeal } = CartService;
 
