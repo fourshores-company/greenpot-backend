@@ -9,7 +9,7 @@ const {
 
 const {
   createOrder, createDelivery, getAllOrders, updateOrderStatus, findOrdersBykey,
-  addOrderFeedback
+  addOrderFeedback, getAllFeedback
 } = OrderService;
 const {
   deleteCartMealByKey,
@@ -179,6 +179,23 @@ export default class OrderController {
       const { feedback } = req.body;
       const orderFeedback = await addOrderFeedback({ userId, orderId, feedback });
       return successResponse(res, { orderFeedback }, 201);
+    } catch (error) {
+      errorResponse(res, {});
+    }
+  }
+
+  /**
+   * admin get all order feedback
+   * @param {object} req
+   * @param {object} res
+   * @returns {JSON } A JSON response with the created order.
+   * @memberof OrderController
+   */
+  static async getOrderFeedback(req, res) {
+    try {
+      const allFeedback = await getAllFeedback();
+      if (!allFeedback.length) return errorResponse(res, { code: 404, message: 'There are no order feedbacks' });
+      return successResponse(res, { allFeedback });
     } catch (error) {
       errorResponse(res, {});
     }

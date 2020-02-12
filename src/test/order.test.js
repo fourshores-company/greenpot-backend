@@ -165,6 +165,27 @@ describe('Users can place orders', () => {
     expect(response.body.error.message).to.equal('order does not exist in our database');
   });
 
+  // admin get feedback
+  it('should successfully get all order feedback by admin', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/feedback')
+      .set('Cookie', `token=${adminUser.token};`);
+    expect(response).to.have.status(200);
+    expect(response.body.status).to.equal('success');
+    expect(response.body.data).to.be.a('object');
+  });
+  it('should return an error if a user is unauthorized', async () => {
+    const response = await chai
+      .request(server)
+      .get('/v1.0/api/order/feedback')
+      .set('Cookie', `token=${normalUser.token};`);
+    expect(response).to.have.status(403);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.error.message).to.equal('Halt! You\'re not authorised');
+  });
+
+
   // TODO: move these admin actions to separate describe function
   it('should sucessfully update order by adim', async () => {
     const response = await chai

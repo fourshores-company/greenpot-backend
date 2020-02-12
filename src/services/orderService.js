@@ -3,7 +3,7 @@ import db from '../models';
 
 
 const {
-  Order, OrderMeal, DeliverOrder, Meal, Feedback, sequelize,
+  Order, OrderMeal, DeliverOrder, Meal, User, Feedback, sequelize,
 } = db;
 
 /**
@@ -178,5 +178,23 @@ export default class OrderService {
   static async addOrderFeedback(payload) {
     const { dataValues: feedback } = await Feedback.create(payload);
     return feedback;
+  }
+
+  /**
+   * get all order feedback
+   * @returns {promise-object} - all orders
+   * @memberof OrderService
+   */
+  static async getAllFeedback() {
+    try {
+      const feedbacks = await Feedback.findAll({
+        attributes: ['id', 'userId', 'orderId', 'feedback', 'updatedAt'],
+        where: {},
+        order: [['updatedAt', 'DESC']],
+      });
+      return feedbacks;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
